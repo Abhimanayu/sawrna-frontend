@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Heart, Minus, Plus, ShoppingBag } from "lucide-react";
+import { Heart, MessageCircle, Minus, Plus, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { siteConfig } from "@/lib/config";
 import type { Product } from "@/lib/products";
+import { formatPrice } from "@/lib/utils";
 import { useCartStore } from "@/store/cart-store";
 
 export function AddToCartPanel({ product }: { product: Product }) {
@@ -12,9 +14,19 @@ export function AddToCartPanel({ product }: { product: Product }) {
   const [qty, setQty] = useState(1);
   const addItem = useCartStore((state) => state.addItem);
   const toggleWishlist = useCartStore((state) => state.toggleWishlist);
+  const selectedPrice = product.salePrice || product.price;
+
+  const addSelectedItem = () => addItem(product, { size, color, qty });
+  const openWhatsAppOrder = () => {
+    addSelectedItem();
+    const message = encodeURIComponent(
+      `SAWRNA order request\n\nProduct: ${product.name}\nColor: ${color}\nSize: ${size}\nQty: ${qty}\nTotal: ${formatPrice(selectedPrice * qty)}`,
+    );
+    window.open(`https://wa.me/${siteConfig.whatsappNumber}?text=${message}`, "_blank");
+  };
 
   return (
-    <div className="mt-8 space-y-6">
+    <div className="mt-8 space-y-6 pb-24 lg:pb-0">
       <div>
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">Color</p>
         <div className="mt-3 flex flex-wrap gap-2">
@@ -53,12 +65,29 @@ export function AddToCartPanel({ product }: { product: Product }) {
             <Plus size={15} />
           </button>
         </div>
-        <Button className="min-w-[180px] flex-1" onClick={() => addItem(product, { size, color, qty })}>
+        <Button className="min-w-[180px] flex-1" onClick={addSelectedItem}>
           <ShoppingBag size={17} /> Add to Cart
+        </Button>
+        <Button variant="outline" className="min-w-[180px] flex-1 border-gold/35" onClick={openWhatsAppOrder}>
+          <MessageCircle size={17} /> WhatsApp
         </Button>
         <Button variant="outline" size="icon" onClick={() => toggleWishlist(product.slug)} aria-label="Wishlist">
           <Heart size={18} />
         </Button>
+      </div>
+      <div className="fixed inset-x-3 bottom-3 z-40 rounded-full border border-emerald/12 bg-white/94 p-2 shadow-[0_18px_54px_rgba(4,45,40,0.18)] backdrop-blur lg:hidden">
+        <div className="grid grid-cols-[1fr_auto_auto] items-center gap-2">
+          <div className="min-w-0 pl-3">
+            <p className="truncate text-[11px] font-semibold uppercase tracking-[0.13em] text-gold">{color} / {size}</p>
+            <p className="text-sm font-semibold text-emerald">{formatPrice(selectedPrice * qty)}</p>
+          </div>
+          <Button size="sm" className="h-11 px-4" onClick={addSelectedItem}>
+            <ShoppingBag size={15} /> Add
+          </Button>
+          <Button size="icon" variant="outline" className="h-11 w-11 border-gold/35" onClick={openWhatsAppOrder} aria-label="Order on WhatsApp">
+            <MessageCircle size={17} />
+          </Button>
+        </div>
       </div>
     </div>
   );

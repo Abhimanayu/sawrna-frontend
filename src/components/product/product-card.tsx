@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, ShoppingBag, Star } from "lucide-react";
+import { Heart, ShoppingBag, Sparkles, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Product } from "@/lib/products";
 import { formatPrice } from "@/lib/utils";
@@ -65,9 +65,14 @@ export function ProductCard({ product, priority = false }: { product: Product; p
           </div>
           <span className="hidden text-[10px] font-semibold uppercase tracking-[0.14em] text-gold sm:inline">SAWRNA edit</span>
         </div>
-        <div className="mt-3 hidden flex-wrap gap-1.5 sm:flex">
-          <span className="rounded-full border border-emerald/10 bg-ivory px-2.5 py-1 text-[11px] text-emerald">{product.fabric}</span>
-          <span className="rounded-full border border-emerald/10 bg-ivory px-2.5 py-1 text-[11px] text-emerald">{product.sizes.length} sizes</span>
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          <span className="hidden rounded-full border border-emerald/10 bg-ivory px-2.5 py-1 text-[11px] text-emerald sm:inline-flex">{product.fabric}</span>
+          {product.sizes.slice(0, 4).map((size) => (
+            <span key={size} className="grid h-7 min-w-7 place-items-center rounded-full border border-emerald/10 bg-ivory px-2 text-[11px] font-semibold text-emerald">
+              {size}
+            </span>
+          ))}
+          {product.sizes.length > 4 && <span className="rounded-full border border-emerald/10 bg-ivory px-2.5 py-1 text-[11px] text-emerald">+{product.sizes.length - 4}</span>}
           {product.stock <= 18 && <span className="rounded-full border border-gold/25 bg-white px-2.5 py-1 text-[11px] text-gold">Low stock</span>}
         </div>
         <div className="mt-auto flex items-center justify-between gap-2 pt-3">
@@ -78,13 +83,20 @@ export function ProductCard({ product, priority = false }: { product: Product; p
           <Button
             size="icon"
             variant="outline"
-            className="h-9 w-9 border-gold/25 bg-ivory text-emerald hover:border-emerald hover:bg-emerald hover:text-white"
+            className="h-9 w-9 shrink-0 border-gold/25 bg-ivory text-emerald hover:border-emerald hover:bg-emerald hover:text-white"
             onClick={() => addItem(product, { size: product.sizes[1] || product.sizes[0], color: product.colors[0] })}
             aria-label="Add to cart"
           >
             <ShoppingBag size={16} />
           </Button>
         </div>
+        <Button
+          size="sm"
+          className="mt-3 w-full bg-emerald text-[11px] hover:bg-black sm:hidden"
+          onClick={() => addItem(product, { size: product.sizes[1] || product.sizes[0], color: product.colors[0] })}
+        >
+          <Sparkles size={14} /> Quick Add
+        </Button>
       </div>
     </article>
   );

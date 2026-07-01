@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const product = await getCatalogProduct(slug);
   if (!product) return {};
   return {
-    title: product.metaTitle,
+    title: product.name,
     description: product.metaDescription,
     keywords: product.keywords,
     alternates: { canonical: product.canonicalUrl },

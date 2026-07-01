@@ -53,7 +53,7 @@ export default async function Home() {
                 <Sparkles size={14} /> Premium Apparel
               </p>
               <h1 className="font-display mt-6 max-w-[720px] font-semibold leading-[0.88] text-emerald">
-                <span className="block text-[clamp(3.75rem,14vw,7.25rem)]">SAWRNA</span>
+                <span className="block text-[clamp(3.75rem,14vw,7.25rem)]">SAWRNA </span>
                 <span className="block text-[clamp(2.45rem,10.5vw,6.05rem)]">Signature Collection</span>
               </h1>
               <div className="my-6 flex max-w-lg items-center gap-4 text-gold">

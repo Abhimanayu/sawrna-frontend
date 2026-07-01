@@ -28,8 +28,8 @@ export function CartClient() {
   }
 
   return (
-    <section className="container-lux grid gap-10 py-10 lg:grid-cols-[1fr_390px] lg:py-16">
-      <div>
+    <section className="container-lux grid min-w-0 gap-10 pb-28 pt-10 lg:grid-cols-[minmax(0,1fr)_390px] lg:py-16">
+      <div className="min-w-0">
         <div className="relative overflow-hidden rounded-[8px] border border-white/10 emerald-depth p-6 text-white">
           <div className="absolute inset-0 luxury-texture opacity-60" />
           <div className="relative">
@@ -39,12 +39,12 @@ export function CartClient() {
         </div>
         <div className="mt-8 grid gap-5">
           {items.map((item) => (
-            <div key={`${item.slug}-${item.size}-${item.color}`} className="gold-edge grid grid-cols-[92px_1fr] gap-4 rounded-[8px] border border-emerald/12 bg-white/84 p-3 shadow-[0_16px_44px_rgba(4,45,40,0.09)] sm:grid-cols-[120px_1fr_auto]">
+            <div key={`${item.slug}-${item.size}-${item.color}`} className="gold-edge grid min-w-0 grid-cols-[92px_minmax(0,1fr)] gap-4 rounded-[8px] border border-emerald/12 bg-white/84 p-3 shadow-[0_16px_44px_rgba(4,45,40,0.09)] sm:grid-cols-[120px_minmax(0,1fr)_auto]">
               <div className="relative aspect-[3/4] overflow-hidden rounded-[6px] border border-gold/18 image-polish p-1">
                 <Image src={item.image} alt={item.name} fill className="object-cover" sizes="120px" />
               </div>
-              <div>
-                <Link href={`/products/${item.slug}`} className="font-display text-2xl font-semibold text-emerald">{item.name}</Link>
+              <div className="min-w-0">
+                <Link href={`/products/${item.slug}`} className="block font-display text-xl font-semibold leading-tight text-emerald sm:text-2xl">{item.name}</Link>
                 <p className="mt-1 text-sm text-muted">{item.color} / {item.size}</p>
                 <p className="mt-3 font-semibold text-emerald">{formatPrice(item.price)}</p>
                 <div className="mt-4 flex w-fit items-center rounded-full border border-emerald/12 bg-ivory">
@@ -64,7 +64,7 @@ export function CartClient() {
           ))}
         </div>
       </div>
-      <aside className="gold-edge h-fit rounded-[8px] border border-emerald/12 bg-white/88 p-6 premium-shadow lg:sticky lg:top-32">
+      <aside className="gold-edge min-w-0 h-fit rounded-[8px] border border-emerald/12 bg-white/88 p-5 premium-shadow sm:p-6 lg:sticky lg:top-32">
         <h2 className="font-display text-3xl font-semibold text-emerald">Order Summary</h2>
         <div className="mt-5 rounded-[8px] border border-emerald/10 bg-ivory/70 p-3">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gold">Preview coupons</p>
@@ -97,6 +97,17 @@ export function CartClient() {
         <Button asChild className="mt-6 w-full"><Link href="/checkout">Checkout</Link></Button>
         <p className="mt-4 text-xs leading-5 text-muted">Cart is persisted locally and can synchronize with user carts once authenticated.</p>
       </aside>
+      <div className="fixed inset-x-3 bottom-3 z-40 rounded-full border border-emerald/12 bg-white/94 p-2 shadow-[0_18px_54px_rgba(4,45,40,0.18)] backdrop-blur lg:hidden">
+        <div className="grid grid-cols-[1fr_auto] items-center gap-2">
+          <div className="min-w-0 pl-3">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.13em] text-gold">Bag total</p>
+            <p className="text-sm font-semibold text-emerald">{formatPrice(total)}</p>
+          </div>
+          <Button asChild className="h-11 px-5">
+            <Link href="/checkout">Checkout</Link>
+          </Button>
+        </div>
+      </div>
     </section>
   );
 }
