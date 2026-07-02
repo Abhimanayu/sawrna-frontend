@@ -41,7 +41,7 @@ export default async function TrackOrderPage({ searchParams }: { searchParams: P
           <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-muted">
             Please check the order ID from checkout. For preview, place a fresh order and use the generated SAW order ID.
           </p>
-          <Button asChild className="mt-6"><Link href="/products">Shop Collection</Link></Button>
+          <Button asChild className="mt-6"><Link href="/products">Shop Now</Link></Button>
         </div>
       )}
 

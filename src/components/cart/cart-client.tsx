@@ -22,7 +22,7 @@ export function CartClient() {
       <section className="container-lux py-20 text-center">
         <h1 className="font-display text-5xl font-semibold text-emerald">Your bag is waiting.</h1>
         <p className="mx-auto mt-4 max-w-md text-muted">Add a SAWRNA piece to begin checkout with COD, WhatsApp order, manual UPI, or payment link.</p>
-        <Button asChild className="mt-8"><Link href="/products">Shop Collection</Link></Button>
+        <Button asChild className="mt-8"><Link href="/products">Shop Now</Link></Button>
       </section>
     );
   }

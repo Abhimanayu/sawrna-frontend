@@ -23,13 +23,13 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-emerald/10 bg-ivory/94 text-emerald shadow-[0_18px_48px_rgba(4,45,40,0.1)] backdrop-blur-xl">
       <div className="border-b border-white/10 bg-emerald text-white">
-        <div className="container-lux flex h-10 items-center justify-center gap-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/86 sm:justify-between lg:h-12">
-          <span className="hidden items-center gap-2 sm:inline-flex"><Truck size={14} /> Fast dispatch across India</span>
+        <div className="container-lux flex h-10 items-center justify-center gap-3 text-center text-[9px] font-semibold uppercase tracking-[0.12em] text-white/86 sm:justify-between sm:text-[10px] sm:tracking-[0.2em] lg:h-12">
+          <span className="hidden items-center gap-2 sm:inline-flex"><Truck size={14} /> Complimentary Shipping Across India</span>
           <span className="inline-flex items-center gap-2 text-gold">
             <ShieldCheck size={14} />
-            <span>Elegance That Feels Like You</span>
+            <span>Crafted for the Modern Indian Woman</span>
           </span>
-          <span className="hidden items-center gap-2 sm:inline-flex"><Sparkles size={14} className="text-gold" /> Premium apparel, timeless you</span>
+          <span className="hidden items-center gap-2 sm:inline-flex"><Sparkles size={14} className="text-gold" /> Premium Short Kurtis Crafted for Everyday Luxury</span>
         </div>
       </div>
       <div className="container-lux flex h-[76px] items-center justify-between gap-2 lg:h-[104px] lg:gap-3">
@@ -94,7 +94,7 @@ export function Header() {
               onClick={() => setOpen(false)}
               className="inline-flex h-12 w-full items-center justify-center rounded-full bg-gold px-5 text-sm font-semibold uppercase tracking-[0.18em] text-emerald shadow-[0_18px_44px_rgba(0,0,0,0.24)]"
             >
-              Shop Collection
+              Shop Now
             </Link>
           </div>
         </div>

@@ -21,7 +21,7 @@ const styleOptions = ["All", "Sleeveless", "Bell sleeves", "Wrap", "Peplum", "St
 const occasionOptions = ["All", "Daily wear", "Work wear", "Party wear", "Summer"];
 const detailOptions = ["All", "Floral", "Printed", "Lace trim", "Mirror work", "Tassel", "Pom-pom", "Embroidered", "Solid"];
 const ratingOptions = ["All", "4.5+", "4.7+", "4.8+"];
-const highlightOptions = ["All", "New arrivals", "Best sellers", "Trending"];
+const highlightOptions = ["All", "New In", "Trending", "Best Sellers", "Premium"];
 
 const optionTokens: Record<string, string[]> = {
   "Bell sleeves": ["bell"],
@@ -192,12 +192,12 @@ export function ProductCollection({ products }: { products: Product[] }) {
         <div className="absolute inset-0 luxury-texture opacity-60" />
         <div className="relative grid gap-7 lg:grid-cols-[1fr_360px] lg:items-end">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">Collection</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">Shop</p>
             <h1 className="font-display mt-3 max-w-3xl text-4xl font-semibold leading-[0.96] text-white sm:text-5xl lg:text-7xl">
-              Premium short kurtis, softly styled.
+              Explore the Signature Edit.
             </h1>
             <p className="mt-5 max-w-2xl text-sm leading-7 text-white/70">
-              A focused SAWRNA edit of denim-friendly short kurtis with refined prints, breathable fabrics, and polished feminine details.
+              Browse premium short kurtis designed with refined fabrics, graceful details, and effortless everyday styling.
             </p>
           </div>
           <div className="grid gap-3 rounded-[8px] border border-white/12 bg-white/8 p-4 backdrop-blur">
@@ -270,7 +270,7 @@ export function ProductCollection({ products }: { products: Product[] }) {
                 className={`shrink-0 rounded-full border px-3 py-2 text-xs font-semibold uppercase tracking-[0.12em] transition ${discountOnly ? "border-gold/45 bg-emerald text-white" : "border-emerald/12 bg-ivory text-emerald"}`}
                 onClick={() => setDiscountOnly((value) => !value)}
               >
-                Discount
+                Sale
               </button>
             </div>
           </div>
@@ -419,12 +419,16 @@ function readPriceMax(value: string | null) {
 }
 
 function readHighlight(searchParams: ReturnType<typeof useSearchParams>) {
-  const highlight = readOption(searchParams.get("highlight"), highlightOptions);
+  const requestedHighlight = searchParams.get("highlight");
+  if (requestedHighlight === "New arrivals") return "New In";
+  if (requestedHighlight === "Best sellers") return "Best Sellers";
+  const highlight = readOption(requestedHighlight, highlightOptions);
   if (highlight !== "All") return highlight;
   const tag = searchParams.get("tag");
-  if (tag === "best-seller") return "Best sellers";
-  if (tag === "new-arrival") return "New arrivals";
+  if (tag === "best-seller") return "Best Sellers";
+  if (tag === "new-arrival") return "New In";
   if (tag === "trending") return "Trending";
+  if (tag === "premium") return "Premium";
   return "All";
 }
 
@@ -441,8 +445,9 @@ function matchesProductOption(product: Product, option: string) {
 }
 
 function matchesHighlight(product: Product, highlight: string) {
-  if (highlight === "New arrivals") return Boolean(product.isNew);
-  if (highlight === "Best sellers") return Boolean(product.isBestSeller);
+  if (highlight === "New In") return Boolean(product.isNew);
+  if (highlight === "Best Sellers") return Boolean(product.isBestSeller);
   if (highlight === "Trending") return Boolean(product.isTrending);
+  if (highlight === "Premium") return product.tags.includes("premium");
   return true;
 }

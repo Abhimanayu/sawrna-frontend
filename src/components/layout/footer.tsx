@@ -4,9 +4,10 @@ import { Logo } from "@/components/brand/logo";
 import { siteConfig } from "@/lib/config";
 
 const columns = [
-  { title: "Shop", links: [["New Arrivals", "/products?highlight=New%20arrivals"], ["Best Sellers", "/products?highlight=Best%20sellers"], ["Wishlist", "/wishlist"], ["Track Order", "/track-order"]] },
-  { title: "Care", links: [["Contact", "/contact"], ["FAQ", "/faq"], ["Shipping Policy", "/shipping-policy"], ["Refund Policy", "/refund-policy"]] },
+  { title: "Shop", links: [["New In", "/products?highlight=New%20In"], ["Best Sellers", "/products?highlight=Best%20Sellers"], ["Wishlist", "/wishlist"], ["Track Order", "/track-order"]] },
+  { title: "Customer Care", links: [["Contact", "/contact"], ["FAQ", "/faq"], ["Shipping Policy", "/shipping-policy"], ["Refund Policy", "/refund-policy"]] },
   { title: "Company", links: [["About", "/about"], ["Privacy Policy", "/privacy-policy"], ["Terms & Conditions", "/terms-and-conditions"]] },
+  { title: "Follow Us", links: [["Instagram", "#"], ["WhatsApp", "#"], ["Email", "mailto:care@sawrna.com"]] },
 ];
 
 export function Footer() {
@@ -16,7 +17,7 @@ export function Footer() {
         <div>
           <Logo surface="dark" />
           <p className="mt-6 max-w-sm text-sm leading-7 text-white/70">
-            Premium short kurtis made for denim days, graceful workwear, casual outings, and polished everyday styling.
+            SAWRNA creates thoughtfully designed premium short kurtis that combine timeless elegance with everyday comfort for the modern Indian woman.
           </p>
           <div className="mt-6 flex gap-3 text-blush">
             {[Camera, Mail, MessageCircle].map((Icon, index) => (
@@ -26,13 +27,13 @@ export function Footer() {
             ))}
           </div>
         </div>
-        <div className="grid gap-8 sm:grid-cols-3">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {columns.map((column) => (
             <div key={column.title}>
               <h3 className="text-xs font-semibold uppercase tracking-[0.22em] text-blush">{column.title}</h3>
               <div className="mt-4 grid gap-3">
                 {column.links.map(([label, href]) => (
-                  <Link key={href} href={href} className="text-sm text-white/68 transition hover:text-white">
+                  <Link key={`${column.title}-${label}`} href={href} className="text-sm text-white/68 transition hover:text-white">
                     {label}
                   </Link>
                 ))}
@@ -44,7 +45,7 @@ export function Footer() {
       <div className="border-t border-white/10 py-5">
         <div className="container-lux flex flex-col justify-between gap-3 text-xs text-white/55 sm:flex-row">
           <span>Copyright 2026 {siteConfig.name}. All rights reserved.</span>
-          <span>COD, Manual UPI, WhatsApp order, payment link supported.</span>
+          <span>Secure checkout, easy returns, and dedicated customer care.</span>
         </div>
       </div>
     </footer>

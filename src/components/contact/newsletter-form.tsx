@@ -15,7 +15,7 @@ export function NewsletterForm() {
         if (email.trim()) setJoined(true);
       }}
     >
-      <label className="text-sm leading-6 text-white/68">Join the newsletter for drops, styling notes, and private previews.</label>
+      <label className="text-sm leading-6 text-white/68">Subscribe for exclusive launches, styling inspiration, and early access to new collections.</label>
       <div className="grid min-w-0 gap-2 sm:flex">
         <input
           required

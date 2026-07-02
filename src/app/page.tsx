@@ -18,16 +18,16 @@ export default async function Home() {
   const trending = products.filter((product) => product.isTrending);
   const bestSellers = products.filter((product) => product.isBestSeller);
   const heroFeatures: [LucideIcon, string, string][] = [
-    [Gem, "Premium fabrics", "Carefully selected for comfort and style"],
-    [Heart, "Timeless designs", "Thoughtful details for everyday elegance"],
-    [Truck, "Easy returns", "Hassle-free returns within 7 days"],
-    [ShieldCheck, "Support", "We're here to help you, always"],
+    [Gem, "Premium Fabrics", "Thoughtfully selected for comfort and style"],
+    [Heart, "Handcrafted Details", "Refined finishes for everyday elegance"],
+    [Truck, "7-Day Easy Returns", "Hassle-free support within 7 days"],
+    [ShieldCheck, "Dedicated Customer Care", "We are here to help you, always"],
   ];
   const reasons: [LucideIcon, string, string][] = [
-    [Gem, "Premium fabrics", "Cotton, rayon, muslin, modal and slub fabrics selected for easy drape."],
-    [Heart, "Feminine details", "Lace trims, tiny tassels, florals, soft tones, and polished necklines."],
-    [Truck, "Trusted delivery", "Fast dispatch, order tracking, and COD support across India."],
-    [ShieldCheck, "Secure checkout", "Manual UPI verification, WhatsApp order, and payment-link workflows."],
+    [Gem, "Premium Fabrics", "Thoughtfully selected for exceptional comfort and lasting quality."],
+    [Heart, "Refined Craftsmanship", "Elegant silhouettes with beautifully finished details."],
+    [Truck, "Reliable Delivery", "Fast dispatch with real-time order tracking."],
+    [ShieldCheck, "Safe & Secure Checkout", "Multiple trusted payment options with complete protection."],
   ];
 
   return (
@@ -53,8 +53,8 @@ export default async function Home() {
                 <Sparkles size={14} /> Premium Apparel
               </p>
               <h1 className="font-display mt-6 max-w-[720px] font-semibold leading-[0.88] text-emerald">
-                <span className="block text-[clamp(3.75rem,14vw,7.25rem)]">SAWRNA </span>
-                <span className="block text-[clamp(2.45rem,10.5vw,6.05rem)]">Signature Collection</span>
+                <span className="block text-[clamp(3.35rem,13vw,7.25rem)]">The Signature</span>
+                <span className="block text-[clamp(3.2rem,12vw,6.5rem)]">Collection</span>
               </h1>
               <div className="my-6 flex max-w-lg items-center gap-4 text-gold">
                 <span className="h-px flex-1 bg-gold/65" />
@@ -62,11 +62,11 @@ export default async function Home() {
                 <span className="h-px flex-1 bg-gold/65" />
               </div>
               <p className="max-w-xl text-lg leading-8 text-muted">
-                Discover contemporary fashion, graceful designs, and premium essentials created to elevate your wardrobe
+                Discover beautifully crafted short kurtis designed for modern women who appreciate effortless elegance, premium fabrics, and timeless style.
               </p>
               <div className="mt-9 flex flex-col gap-3 sm:flex-row">
                 <Link href="/products" className="inline-flex h-14 items-center justify-center gap-2 rounded-full bg-emerald px-8 text-sm font-semibold uppercase tracking-[0.14em] text-white shadow-[0_18px_44px_rgba(4,45,40,0.2)] transition hover:-translate-y-0.5 hover:bg-[#021f1b]">
-                  Shop Collection <ArrowRight size={18} />
+                  Shop Now <ArrowRight size={18} />
                 </Link>
                 <Link href="#lookbook" className="inline-flex h-14 items-center justify-center rounded-full border border-gold/55 bg-white/62 px-8 text-sm font-semibold uppercase tracking-[0.14em] text-emerald transition hover:-translate-y-0.5 hover:border-emerald/40 hover:bg-white">
                   View Lookbook
@@ -104,18 +104,18 @@ export default async function Home() {
         <div className="relative z-10 -mt-8 bg-emerald pb-5 pt-14 text-white">
           <div className="container-lux flex flex-wrap items-center justify-center gap-3 text-center text-[10px] font-semibold uppercase tracking-[0.18em] text-white/86 sm:gap-4 sm:text-xs sm:tracking-[0.28em]">
             <Sparkles size={15} className="shrink-0 text-gold" />
-            <span>Discover effortless style. Own your moment.</span>
+            <span>Find Your Signature Style</span>
             <Sparkles size={15} className="shrink-0 text-gold" />
           </div>
         </div>
       </section>
 
       <ShopByEdit products={products} />
-      <ProductSection eyebrow="New arrivals" title="Fresh short kurtis for the week." products={newArrivals} />
-      <ProductSection eyebrow="Handpicked collection" title="Soft pieces for denim days." products={handpicked} tone="sage" />
-      <ProductSection eyebrow="Premium collection" title="Feminine details, premium finish." products={premium} />
-      <ProductSection eyebrow="Trending products" title="Most-loved SAWRNA picks." products={trending} tone="sage" />
-      <ProductSection eyebrow="Best sellers" title="SAWRNA favorites." products={bestSellers} />
+      <ProductSection eyebrow="New Arrivals" title="Freshly crafted styles for the season." products={newArrivals} />
+      <ProductSection eyebrow="Editor's Picks" title="Handpicked silhouettes with graceful details." products={handpicked} tone="sage" />
+      <ProductSection eyebrow="Signature Collection" title="Premium finishes for timeless everyday elegance." products={premium} />
+      <ProductSection eyebrow="Trending Now" title="Styles women are loving right now." products={trending} tone="sage" />
+      <ProductSection eyebrow="Customer Favorites" title="Our most-loved short kurtis." products={bestSellers} />
 
       <section className="relative overflow-hidden border-y border-white/10 bg-emerald py-16 text-white lg:py-20">
         <div className="absolute inset-0 luxury-texture opacity-70" />
@@ -123,7 +123,7 @@ export default async function Home() {
         <Reveal>
           <div className="relative mb-9 max-w-2xl">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">Why SAWRNA</p>
-            <h2 className="font-display mt-3 text-[2.55rem] font-semibold leading-[0.98] text-white sm:text-5xl lg:text-6xl">Premium details without the heavy feeling.</h2>
+            <h2 className="font-display mt-3 text-[2.55rem] font-semibold leading-[0.98] text-white sm:text-5xl lg:text-6xl">Designed for Comfort. Crafted for Confidence.</h2>
           </div>
           <div className="relative grid gap-5 md:grid-cols-4">
             {reasons.map(([Icon, title, text]) => (
@@ -144,7 +144,7 @@ export default async function Home() {
         <div className="container-lux">
           <Reveal>
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">Fashion lookbook</p>
-            <h2 className="font-display mt-3 text-[2.55rem] font-semibold leading-[0.98] text-emerald sm:text-5xl lg:text-7xl">Soft kurtis, polished denim mood.</h2>
+            <h2 className="font-display mt-3 text-[2.55rem] font-semibold leading-[0.98] text-emerald sm:text-5xl lg:text-7xl">Everyday Styling Inspiration</h2>
           </Reveal>
           <div className="mt-10 grid gap-5 md:grid-cols-3">
             {products.slice(0, 3).map((product, index) => (
@@ -166,7 +166,7 @@ export default async function Home() {
         <Reveal>
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">Testimonials</p>
-            <h2 className="font-display mt-3 text-[2.55rem] font-semibold leading-[0.98] text-emerald sm:text-5xl">Loved for comfort, softness, and finish.</h2>
+            <h2 className="font-display mt-3 text-[2.55rem] font-semibold leading-[0.98] text-emerald sm:text-5xl">Trusted by Women Across India</h2>
           </div>
         </Reveal>
         <div className="grid gap-4">
@@ -182,7 +182,7 @@ export default async function Home() {
         <div className="container-lux grid gap-8 lg:grid-cols-[1fr_420px]">
           <div className="relative min-w-0">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">Instagram</p>
-            <h2 className="font-display mt-3 max-w-full break-words text-[2.45rem] font-semibold leading-[0.98] text-white sm:text-5xl lg:text-6xl">Follow the refined SAWRNA mood.</h2>
+            <h2 className="font-display mt-3 max-w-full break-words text-[2.35rem] font-semibold leading-[0.98] text-white sm:text-5xl lg:text-6xl">Discover Everyday Style Inspiration</h2>
           </div>
           <NewsletterForm />
         </div>
@@ -194,13 +194,13 @@ export default async function Home() {
 function ShopByEdit({ products }: { products: Product[] }) {
   const edits = [
     {
-      label: "New arrivals",
-      href: "/products?highlight=New%20arrivals",
+      label: "New In",
+      href: "/products?highlight=New%20In",
       count: products.filter((product) => product.isNew).length,
     },
     {
-      label: "Best sellers",
-      href: "/products?highlight=Best%20sellers",
+      label: "Best Sellers",
+      href: "/products?highlight=Best%20Sellers",
       count: products.filter((product) => product.isBestSeller).length,
     },
     {
@@ -209,7 +209,7 @@ function ShopByEdit({ products }: { products: Product[] }) {
       count: products.filter((product) => product.isTrending).length,
     },
     {
-      label: "Discount edit",
+      label: "Sale",
       href: "/products?discount=true&sort=discount",
       count: products.filter((product) => product.discount).length,
     },
@@ -222,10 +222,10 @@ function ShopByEdit({ products }: { products: Product[] }) {
         <div className="relative flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">Shop the edit</p>
-            <h2 className="font-display mt-2 text-[2rem] font-semibold leading-[1] text-white sm:text-3xl lg:text-4xl">Curated paths into the SAWRNA collection.</h2>
+            <h2 className="font-display mt-2 text-[2rem] font-semibold leading-[1] text-white sm:text-3xl lg:text-4xl">Curated for every occasion.</h2>
           </div>
           <Link href="/products" className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-white/14 bg-white/8 px-5 text-xs font-semibold uppercase tracking-[0.16em] text-white transition hover:border-gold/50 hover:text-gold">
-            <SlidersHorizontal size={15} /> All filters
+            <SlidersHorizontal size={15} /> Shop All
           </Link>
         </div>
         <div className="relative mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">

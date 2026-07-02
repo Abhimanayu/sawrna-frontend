@@ -180,3 +180,57 @@ body {
 .sawrna-float {
   animation: sawrna-float 7s ease-in-out infinite;
 }
+
+@keyframes sawrna-curtain-out {
+  0%, 58% {
+    opacity: 1;
+    visibility: visible;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes sawrna-curtain-logo-in {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sawrna-curtain {
+  animation: sawrna-curtain-out 0.78s ease forwards;
+}
+
+.sawrna-curtain-logo {
+  animation: sawrna-curtain-logo-in 0.36s ease forwards;
+}
+
+@keyframes sawrna-reveal-in {
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sawrna-reveal {
+  animation: sawrna-reveal-in 0.68s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sawrna-curtain,
+  .sawrna-curtain-logo,
+  .sawrna-reveal,
+  .sawrna-float {
+    animation: none;
+  }
+}
