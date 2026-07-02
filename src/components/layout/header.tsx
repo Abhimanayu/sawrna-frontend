@@ -27,8 +27,7 @@ export function Header() {
           <span className="hidden items-center gap-2 sm:inline-flex"><Truck size={14} /> Fast dispatch across India</span>
           <span className="inline-flex items-center gap-2 text-gold">
             <ShieldCheck size={14} />
-            <span className="sm:hidden">COD + WhatsApp + UPI</span>
-            <span className="hidden sm:inline">COD, WhatsApp order & manual UPI supported</span>
+            <span>Elegance That Feels Like You</span>
           </span>
           <span className="hidden items-center gap-2 sm:inline-flex"><Sparkles size={14} className="text-gold" /> Premium apparel, timeless you</span>
         </div>
