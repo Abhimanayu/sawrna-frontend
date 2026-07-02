@@ -14,6 +14,9 @@ export async function GET() {
       cloudinary: Boolean(process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET),
       whatsappNumber: Boolean(process.env.NEXT_PUBLIC_WHATSAPP_NUMBER),
       upiId: Boolean(process.env.NEXT_PUBLIC_UPI_ID),
+      adminAccessToken: Boolean(process.env.ADMIN_ACCESS_TOKEN),
+      customerDemoPassword: Boolean(process.env.CUSTOMER_DEMO_PASSWORD),
     },
+    previewFallback: !process.env.MONGODB_URI,
   });
 }

@@ -99,20 +99,20 @@ export function CheckoutClient() {
 
   return (
     <section className="container-lux pb-28 pt-10 lg:py-16">
-      <div className="relative mb-8 overflow-hidden rounded-[8px] border border-white/10 emerald-depth p-6 text-white lg:p-9">
+      <div className="relative mb-5 overflow-hidden rounded-[8px] border border-white/10 emerald-depth p-5 text-white sm:mb-8 sm:p-6 lg:p-9">
         <div className="absolute inset-0 luxury-texture opacity-60" />
         <div className="relative max-w-3xl">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">Secure checkout</p>
-          <h1 className="font-display mt-3 text-5xl font-semibold leading-tight text-white lg:text-7xl">Address, payment, review.</h1>
+          <h1 className="font-display mt-3 text-4xl font-semibold leading-[0.98] text-white sm:text-5xl lg:text-7xl">Address, payment, review.</h1>
           <p className="mt-4 max-w-2xl text-sm leading-7 text-white/68">Complete your order with COD, WhatsApp order, manual UPI verification, or payment link support.</p>
         </div>
       </div>
 
-      <div className="mb-8 grid gap-3 sm:grid-cols-3">
+      <div className="mb-5 grid grid-cols-3 gap-2 sm:mb-8 sm:gap-3">
         {["Address", "Payment", "Review"].map((step, index) => (
-          <div key={step} className="flex items-center gap-3 rounded-full border border-emerald/12 bg-white/86 px-4 py-3 text-sm text-emerald shadow-[0_10px_28px_rgba(4,45,40,0.08)]">
-            <span className="grid h-8 w-8 place-items-center rounded-full bg-emerald text-xs font-semibold text-white">{index + 1}</span>
-            <span className="font-semibold">{step}</span>
+          <div key={step} className="flex flex-col items-center justify-center gap-2 rounded-[8px] border border-emerald/12 bg-white/86 px-2 py-3 text-center text-xs text-emerald shadow-[0_10px_28px_rgba(4,45,40,0.08)] sm:flex-row sm:justify-start sm:rounded-full sm:px-4 sm:text-sm">
+            <span className="grid h-7 w-7 place-items-center rounded-full bg-emerald text-[11px] font-semibold text-white sm:h-8 sm:w-8 sm:text-xs">{index + 1}</span>
+            <span className="font-semibold leading-none">{step}</span>
           </div>
         ))}
       </div>

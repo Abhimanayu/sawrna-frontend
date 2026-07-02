@@ -25,7 +25,11 @@ export function Header() {
       <div className="border-b border-white/10 bg-emerald text-white">
         <div className="container-lux flex h-10 items-center justify-center gap-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/86 sm:justify-between lg:h-12">
           <span className="hidden items-center gap-2 sm:inline-flex"><Truck size={14} /> Fast dispatch across India</span>
-          <span className="inline-flex items-center gap-2 text-gold"><ShieldCheck size={14} /> COD, WhatsApp order & manual UPI supported</span>
+          <span className="inline-flex items-center gap-2 text-gold">
+            <ShieldCheck size={14} />
+            <span className="sm:hidden">COD + WhatsApp + UPI</span>
+            <span className="hidden sm:inline">COD, WhatsApp order & manual UPI supported</span>
+          </span>
           <span className="hidden items-center gap-2 sm:inline-flex"><Sparkles size={14} className="text-gold" /> Premium apparel, timeless you</span>
         </div>
       </div>

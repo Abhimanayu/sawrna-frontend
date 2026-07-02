@@ -1,10 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
 import type React from "react";
-import { Database, ExternalLink, PackageCheck, ReceiptText, ShieldCheck, UsersRound } from "lucide-react";
+import { Database, ExternalLink, LockKeyhole, LogOut, PackageCheck, ReceiptText, ShieldCheck, UsersRound } from "lucide-react";
 import { Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
+import { adminLoginAction, adminLogoutAction } from "@/app/actions/admin-auth";
 import { getAdminOrderStats } from "@/lib/admin-dashboard";
+import { hasAdminAccess, isAdminAccessConfigured } from "@/lib/admin-auth";
 import { getAdminCatalogSnapshot } from "@/lib/catalog";
 import { formatPrice } from "@/lib/utils";
 import { createOrUpdateProductAction, deleteProductAction, seedProductsAction, toggleProductStatusAction } from "@/app/actions/products";
@@ -13,7 +16,16 @@ import { getOrdersSnapshot, orderStatuses } from "@/lib/orders";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminPage() {
+export const metadata: Metadata = {
+  title: "Admin Console",
+  description: "Protected SAWRNA store administration for catalog and order management.",
+  robots: { index: false, follow: false },
+};
+
+export default async function AdminPage({ searchParams }: { searchParams: Promise<{ error?: string; setup?: string }> }) {
+  const [{ error, setup }, allowed] = await Promise.all([searchParams, hasAdminAccess()]);
+  if (!allowed) return <AdminGate configured={isAdminAccessConfigured()} error={error} setup={setup} />;
+
   const [catalog, orderStats, orderSnapshot] = await Promise.all([getAdminCatalogSnapshot(), getAdminOrderStats(), getOrdersSnapshot()]);
   const canWrite = catalog.canWrite;
   const activeProducts = catalog.products.filter((product) => product.status === "active").length;
@@ -74,6 +86,11 @@ export default async function AdminPage() {
             <p className="mt-1 text-sm text-white/75">Open the exact public surfaces connected to this admin catalog.</p>
           </div>
           <div className="flex flex-wrap gap-2">
+            <form action={adminLogoutAction}>
+              <button className="inline-flex h-10 items-center gap-2 rounded-full border border-white/12 bg-white/8 px-4 text-xs font-semibold uppercase tracking-[0.14em] text-white transition hover:border-gold/50 hover:text-gold">
+                Logout <LogOut size={13} />
+              </button>
+            </form>
             {[
               ["Home", "/"],
               ["Products", "/products"],
@@ -234,6 +251,54 @@ export default async function AdminPage() {
               ))}
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function AdminGate({ configured, error, setup }: { configured: boolean; error?: string; setup?: string }) {
+  return (
+    <section className="relative min-h-[calc(100svh-12rem)] overflow-hidden bg-[linear-gradient(135deg,#ffffff_0%,#f8f7f4_48%,#dfe9e2_100%)] py-16">
+      <div className="pointer-events-none absolute inset-0 luxury-texture opacity-45" />
+      <div className="container-lux relative">
+        <div className="mx-auto max-w-xl rounded-[8px] border border-emerald/12 bg-white/88 p-6 text-center shadow-[0_24px_80px_rgba(4,45,40,0.12)] sm:p-8">
+          <Logo className="mx-auto justify-center" />
+          <span className="mx-auto mt-8 grid h-14 w-14 place-items-center rounded-full bg-emerald text-gold">
+            <LockKeyhole size={24} />
+          </span>
+          <p className="mt-6 text-xs font-semibold uppercase tracking-[0.24em] text-gold">Protected Admin</p>
+          <h1 className="font-display mt-3 text-4xl font-semibold text-emerald sm:text-5xl">Store Console Locked</h1>
+          <p className="mx-auto mt-4 max-w-md text-sm leading-6 text-muted">
+            Admin catalog, orders, and status actions are private. Enter the configured access token to continue.
+          </p>
+
+          {!configured ? (
+            <div className="mt-7 rounded-[8px] border border-gold/25 bg-ivory p-4 text-left text-sm leading-6 text-emerald">
+              <p className="font-semibold">Setup required</p>
+              <p className="mt-1 text-muted">Set <span className="font-mono text-emerald">ADMIN_ACCESS_TOKEN</span> in Vercel environment variables, then redeploy.</p>
+            </div>
+          ) : (
+            <form action={adminLoginAction} className="mt-7 grid gap-3 text-left">
+              <label className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald/70">
+                Access token
+                <input
+                  name="token"
+                  type="password"
+                  required
+                  className="mt-2 h-12 w-full rounded-full border border-emerald/12 bg-ivory px-5 text-sm normal-case tracking-normal text-emerald outline-none transition focus:border-gold"
+                  placeholder="Enter admin token"
+                />
+              </label>
+              <Button>Unlock Admin</Button>
+            </form>
+          )}
+
+          {error === "invalid" && <p className="mt-4 rounded-[8px] border border-gold/25 bg-ivory p-3 text-sm text-[#8a4f1f]">Invalid admin token.</p>}
+          {setup === "required" && <p className="mt-4 rounded-[8px] border border-gold/25 bg-ivory p-3 text-sm text-[#8a4f1f]">Admin token is not configured.</p>}
+          <Link href="/" className="mt-6 inline-block text-xs font-semibold uppercase tracking-[0.16em] text-muted transition hover:text-gold">
+            Return to website
+          </Link>
         </div>
       </div>
     </section>

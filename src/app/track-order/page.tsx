@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { findOrderByLookup, orderStatuses } from "@/lib/orders";
@@ -7,6 +8,11 @@ import { formatPrice } from "@/lib/utils";
 const progressStatuses = orderStatuses.filter((status) => !["Cancelled", "Failed"].includes(status));
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Track Order",
+  description: "Track your SAWRNA order timeline from pending to delivered.",
+};
 
 export default async function TrackOrderPage({ searchParams }: { searchParams: Promise<{ lookup?: string }> }) {
   const { lookup = "" } = await searchParams;

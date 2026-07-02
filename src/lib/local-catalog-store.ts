@@ -1,23 +1,34 @@
 import { mkdir, readFile, writeFile } from "fs/promises";
 import path from "path";
+import { getLocalDataDir } from "@/lib/local-data";
 import type { Product } from "@/lib/products";
 
-const dataDir = path.join(process.cwd(), ".sawrna-data");
+const dataDir = getLocalDataDir();
 const catalogFile = path.join(dataDir, "products.json");
+let memoryProducts: Product[] = [];
 
 export async function readLocalCatalogProducts() {
   try {
     const raw = await readFile(catalogFile, "utf8");
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? (parsed as Product[]) : [];
+    if (Array.isArray(parsed)) {
+      memoryProducts = parsed as Product[];
+      return memoryProducts;
+    }
+    return memoryProducts;
   } catch {
-    return [];
+    return memoryProducts;
   }
 }
 
 export async function writeLocalCatalogProducts(products: Product[]) {
-  await mkdir(dataDir, { recursive: true });
-  await writeFile(catalogFile, JSON.stringify(products, null, 2), "utf8");
+  memoryProducts = products;
+  try {
+    await mkdir(dataDir, { recursive: true });
+    await writeFile(catalogFile, JSON.stringify(products, null, 2), "utf8");
+  } catch (error) {
+    console.warn("SAWRNA local catalog file write skipped; using memory fallback", error);
+  }
 }
 
 export async function upsertLocalCatalogProduct(product: Product) {
