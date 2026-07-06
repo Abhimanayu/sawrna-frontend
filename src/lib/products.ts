@@ -14,6 +14,7 @@ export type Product = {
   colors: string[];
   sizes: string[];
   variants: { color: string; size: string; stock: number }[];
+  variantMedia?: { color: string; images: string[] }[];
   images: string[];
   gallery: string[];
   tags: string[];
@@ -30,6 +31,12 @@ export type Product = {
   isNew?: boolean;
   isBestSeller?: boolean;
   isTrending?: boolean;
+};
+
+type ColorOptionSeed = {
+  color: string;
+  image: string;
+  stock: number;
 };
 
 type ProductSeed = {
@@ -50,6 +57,7 @@ type ProductSeed = {
   isNew?: boolean;
   isBestSeller?: boolean;
   isTrending?: boolean;
+  alternateOptions?: ColorOptionSeed[];
 };
 
 const commonSizes = ["S", "M", "L", "XL", "XXL"];
@@ -142,6 +150,7 @@ const seeds: ProductSeed[] = [
     rating: 4.6,
     reviews: 22,
     isTrending: true,
+    alternateOptions: [{ color: "Pista Green", image: "sawrna-short-kurti-06.jpeg", stock: 22 }],
   },
   {
     name: "Pista Leaf Print Sleeveless Short Kurti",
@@ -340,6 +349,7 @@ const seeds: ProductSeed[] = [
     tags: ["solid", "lace-trim", "daily-wear", "short-kurti"],
     rating: 4.6,
     reviews: 21,
+    alternateOptions: [{ color: "Wine", image: "sawrna-short-kurti-14.jpeg", stock: 19 }],
   },
   {
     name: "Sky Blue Embroidered Short Kurti",
@@ -377,18 +387,30 @@ const seeds: ProductSeed[] = [
   },
 ];
 
-function buildVariants(color: string, stock: number) {
+function buildVariants(options: ColorOptionSeed[]) {
   const split = [0.18, 0.24, 0.24, 0.2, 0.14];
-  return commonSizes.map((size, index) => ({
-    color,
-    size,
-    stock: Math.max(1, Math.floor(stock * split[index])),
-  }));
+  return options.flatMap(({ color, stock }) =>
+    commonSizes.map((size, index) => ({
+      color,
+      size,
+      stock: Math.max(1, Math.floor(stock * split[index])),
+    })),
+  );
+}
+
+function getColorOptions(seed: ProductSeed) {
+  return [{ color: seed.color, image: seed.image, stock: seed.stock }, ...(seed.alternateOptions || [])];
 }
 
 function makeProduct(seed: ProductSeed, index: number): Product {
-  const image = `${productBase}/${seed.image}`;
+  const colorOptions = getColorOptions(seed);
+  const variantMedia = colorOptions.map((option) => ({
+    color: option.color,
+    images: [`${productBase}/${option.image}`],
+  }));
+  const image = variantMedia[0]?.images[0] || `${productBase}/${seed.image}`;
   const discount = seed.salePrice ? Math.round(((seed.price - seed.salePrice) / seed.price) * 100) : undefined;
+  const totalStock = colorOptions.reduce((sum, option) => sum + option.stock, 0);
 
   return {
     name: seed.name,
@@ -399,18 +421,20 @@ function makeProduct(seed: ProductSeed, index: number): Product {
     price: seed.price,
     salePrice: seed.salePrice,
     discount,
-    stock: seed.stock,
+    stock: totalStock,
     fabric: seed.fabric,
-    colors: [seed.color],
+    colors: colorOptions.map((option) => option.color),
     sizes: commonSizes,
-    variants: buildVariants(seed.color, seed.stock),
+    variants: buildVariants(colorOptions),
+    variantMedia,
     images: [image],
-    gallery: [image],
+    gallery: Array.from(new Set(variantMedia.flatMap((option) => option.images))),
     tags: seed.tags,
     features: [
       "Premium short kurti silhouette",
       seed.neckline,
       seed.sleeve,
+      colorOptions.length > 1 ? `${colorOptions.length} colour options in one article` : "Single colour article",
       "Pairs well with denim and wide-leg pants",
     ],
     specifications: {
@@ -422,8 +446,8 @@ function makeProduct(seed: ProductSeed, index: number): Product {
       Care: "Gentle hand wash separately",
     },
     metaTitle: `${seed.name} | SAWRNA Short Kurtis`,
-    metaDescription: `Shop ${seed.name}, a premium ${seed.color.toLowerCase()} short kurti from SAWRNA with dummy stock and size variants.`,
-    keywords: ["short kurti", "women short kurti", seed.color.toLowerCase(), seed.fabric.toLowerCase(), "SAWRNA"],
+    metaDescription: `Shop ${seed.name}, a premium short kurti from SAWRNA with dummy stock, selectable sizes, and ${colorOptions.map((option) => option.color.toLowerCase()).join(", ")} options.`,
+    keywords: ["short kurti", "women short kurti", ...colorOptions.map((option) => option.color.toLowerCase()), seed.fabric.toLowerCase(), "SAWRNA"],
     canonicalUrl: `${siteConfig.url}/products/${seed.slug}`,
     ogImage: image,
     status: "active",

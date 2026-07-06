@@ -36,8 +36,7 @@ html {
 }
 
 body {
-  min-width: 0;
-  overflow-x: hidden;
+  min-width: 320px;
   background:
     linear-gradient(135deg, rgba(239, 228, 210, 0.82) 0%, rgba(248, 243, 234, 0) 42%),
     linear-gradient(180deg, #fffaf2 0%, var(--ivory) 44%, #ffffff 100%);

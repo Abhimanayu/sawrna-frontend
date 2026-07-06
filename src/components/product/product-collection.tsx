@@ -188,34 +188,35 @@ export function ProductCollection({ products }: { products: Product[] }) {
 
   return (
     <section className="container-lux pb-24 pt-8 lg:pb-16 lg:pt-12">
-      <div className="relative mb-8 overflow-hidden rounded-[8px] border border-white/10 emerald-depth p-6 text-white lg:p-9">
-        <div className="absolute inset-0 luxury-texture opacity-60" />
+      <div className="relative mb-8 overflow-hidden rounded-[8px] border border-gold/20 bg-[linear-gradient(135deg,#fffaf2_0%,#f6efe4_58%,#efe4d2_100%)] p-6 text-emerald shadow-[0_26px_78px_rgba(4,45,40,0.10)] lg:p-9">
+        <div className="absolute inset-0 ivory-texture opacity-70" />
+        <div className="absolute inset-y-0 right-0 hidden w-[34%] bg-[radial-gradient(circle_at_top,rgba(4,45,40,0.08),transparent_62%)] lg:block" />
         <div className="relative grid gap-7 lg:grid-cols-[1fr_360px] lg:items-end">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">Collection</p>
-            <h1 className="font-display mt-3 max-w-3xl text-4xl font-semibold leading-[0.96] text-white sm:text-5xl lg:text-7xl">
+            <h1 className="font-display mt-3 max-w-3xl text-4xl font-semibold leading-[0.96] text-emerald sm:text-5xl lg:text-7xl">
               Premium short kurtis, softly styled.
             </h1>
-            <p className="mt-5 max-w-2xl text-sm leading-7 text-white/70">
-              A focused SAWRNA edit of denim-friendly short kurtis with refined prints, breathable fabrics, and polished feminine details.
+            <p className="mt-5 max-w-2xl text-sm leading-7 text-muted">
+              A focused collection of denim-friendly short kurtis with refined prints, breathable fabrics, and polished feminine details.
             </p>
           </div>
-          <div className="grid gap-3 rounded-[8px] border border-white/12 bg-white/8 p-4 backdrop-blur">
+          <div className="grid gap-3 rounded-[8px] border border-gold/18 bg-white/82 p-4 shadow-[0_18px_50px_rgba(4,45,40,0.08)] backdrop-blur">
             <div className="flex items-center justify-between gap-3">
-              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-white/62">Available pieces</span>
+              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">Available pieces</span>
               <span className="font-display text-4xl font-semibold text-gold">{filtered.length}</span>
             </div>
-            <div className="grid grid-cols-3 gap-2 text-center text-[11px] font-semibold uppercase tracking-[0.12em] text-white/58">
-              <span className="rounded-full border border-white/10 px-2 py-2">New</span>
-              <span className="rounded-full border border-white/10 px-2 py-2">Printed</span>
-              <span className="rounded-full border border-white/10 px-2 py-2">COD</span>
+            <div className="grid grid-cols-3 gap-2 text-center text-[11px] font-semibold uppercase tracking-[0.12em] text-emerald/66">
+              <span className="rounded-full border border-emerald/10 bg-ivory px-2 py-2">New</span>
+              <span className="rounded-full border border-emerald/10 bg-ivory px-2 py-2">Printed</span>
+              <span className="rounded-full border border-emerald/10 bg-ivory px-2 py-2">COD</span>
             </div>
           </div>
         </div>
         <div className="relative mt-5 grid grid-cols-3 gap-2 sm:mt-7 sm:gap-3">
           {collectionMarks.map(([Icon, label, shortLabel]) => (
-            <div key={label} className="flex flex-col items-center justify-center gap-2 rounded-[8px] border border-white/12 bg-white/8 px-2 py-3 text-center text-xs text-white/76 backdrop-blur sm:flex-row sm:justify-start sm:gap-3 sm:rounded-full sm:px-4 sm:text-sm">
-              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/10 text-gold">
+            <div key={label} className="flex flex-col items-center justify-center gap-2 rounded-[8px] border border-emerald/10 bg-white/76 px-2 py-3 text-center text-xs text-emerald/76 shadow-[0_14px_34px_rgba(4,45,40,0.05)] backdrop-blur sm:flex-row sm:justify-start sm:gap-3 sm:rounded-full sm:px-4 sm:text-sm">
+              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-emerald text-gold">
                 <Icon size={16} />
               </span>
               <span className="font-medium sm:hidden">{shortLabel}</span>
@@ -233,7 +234,7 @@ export function ProductCollection({ products }: { products: Product[] }) {
         <div className="min-w-0">
           <div className="flex flex-col gap-4 rounded-[8px] border border-emerald/12 bg-white/76 p-4 shadow-[0_16px_42px_rgba(4,45,40,0.08)] lg:flex-row lg:items-center lg:justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">Browse edit</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">Browse collection</p>
               <p className="mt-1 text-sm text-muted">
                 Showing <span className="font-semibold text-emerald">{filtered.length}</span> of {products.length} curated pieces
               </p>
@@ -287,7 +288,7 @@ export function ProductCollection({ products }: { products: Product[] }) {
             ) : (
               <div className="rounded-[8px] border border-emerald/12 bg-white/78 p-10 text-center shadow-[0_18px_54px_rgba(4,45,40,0.08)]">
                 <h2 className="font-display text-4xl text-emerald">No pieces found.</h2>
-                <p className="mt-3 text-muted">Try clearing one filter to see more of the SAWRNA edit.</p>
+                <p className="mt-3 text-muted">Try clearing one filter to see more of the collection.</p>
                 <Button className="mt-6" onClick={clearFilters}>Clear Filters</Button>
               </div>
             )}

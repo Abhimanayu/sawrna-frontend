@@ -53,7 +53,7 @@ export default async function Home() {
                 <Sparkles size={14} /> Premium Apparel
               </p>
               <h1 className="font-display mt-6 max-w-[720px] font-semibold leading-[0.88] text-emerald">
-                <span className="block text-[clamp(3.75rem,14vw,7.25rem)]">SAWRNA </span>
+                <span className="block text-[clamp(3.75rem,14vw,7.25rem)]">SAWRNA</span>
                 <span className="block text-[clamp(2.45rem,10.5vw,6.05rem)]">Signature Collection</span>
               </h1>
               <div className="my-6 flex max-w-lg items-center gap-4 text-gold">
@@ -68,8 +68,8 @@ export default async function Home() {
                 <Link href="/products" className="inline-flex h-14 items-center justify-center gap-2 rounded-full bg-emerald px-8 text-sm font-semibold uppercase tracking-[0.14em] text-white shadow-[0_18px_44px_rgba(4,45,40,0.2)] transition hover:-translate-y-0.5 hover:bg-[#021f1b]">
                   Shop Collection <ArrowRight size={18} />
                 </Link>
-                <Link href="#lookbook" className="inline-flex h-14 items-center justify-center rounded-full border border-gold/55 bg-white/62 px-8 text-sm font-semibold uppercase tracking-[0.14em] text-emerald transition hover:-translate-y-0.5 hover:border-emerald/40 hover:bg-white">
-                  View Lookbook
+                <Link href="#preview" className="inline-flex h-14 items-center justify-center rounded-full border border-gold/55 bg-white/62 px-8 text-sm font-semibold uppercase tracking-[0.14em] text-emerald transition hover:-translate-y-0.5 hover:border-emerald/40 hover:bg-white">
+                  Preview The Collection
                 </Link>
               </div>
               <div className="mt-8 overflow-hidden rounded-[8px] border border-gold/25 bg-white/70 p-1 shadow-[0_22px_70px_rgba(4,45,40,0.12)] lg:hidden">
@@ -102,7 +102,7 @@ export default async function Home() {
           </div>
         </div>
         <div className="relative z-10 -mt-8 bg-emerald pb-5 pt-14 text-white">
-          <div className="container-lux flex flex-wrap items-center justify-center gap-3 text-center text-[10px] font-semibold uppercase tracking-[0.18em] text-white/86 sm:gap-4 sm:text-xs sm:tracking-[0.28em]">
+          <div className="container-lux flex items-center justify-center gap-4 text-center text-xs font-semibold uppercase tracking-[0.28em] text-white/86">
             <Sparkles size={15} className="shrink-0 text-gold" />
             <span>Discover effortless style. Own your moment.</span>
             <Sparkles size={15} className="shrink-0 text-gold" />
@@ -123,7 +123,7 @@ export default async function Home() {
         <Reveal>
           <div className="relative mb-9 max-w-2xl">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">Why SAWRNA</p>
-            <h2 className="font-display mt-3 text-[2.55rem] font-semibold leading-[0.98] text-white sm:text-5xl lg:text-6xl">Premium details without the heavy feeling.</h2>
+            <h2 className="font-display mt-3 text-5xl font-semibold text-white lg:text-6xl">Premium details without the heavy feeling.</h2>
           </div>
           <div className="relative grid gap-5 md:grid-cols-4">
             {reasons.map(([Icon, title, text]) => (
@@ -140,11 +140,11 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="lookbook" className="py-16 lg:py-20">
+      <section id="preview" className="py-16 lg:py-20">
         <div className="container-lux">
           <Reveal>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">Fashion lookbook</p>
-            <h2 className="font-display mt-3 text-[2.55rem] font-semibold leading-[0.98] text-emerald sm:text-5xl lg:text-7xl">Soft kurtis, polished denim mood.</h2>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">Collection preview</p>
+            <h2 className="font-display mt-3 text-5xl font-semibold text-emerald lg:text-7xl">A closer look at the collection.</h2>
           </Reveal>
           <div className="mt-10 grid gap-5 md:grid-cols-3">
             {products.slice(0, 3).map((product, index) => (
@@ -166,7 +166,7 @@ export default async function Home() {
         <Reveal>
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">Testimonials</p>
-            <h2 className="font-display mt-3 text-[2.55rem] font-semibold leading-[0.98] text-emerald sm:text-5xl">Loved for comfort, softness, and finish.</h2>
+            <h2 className="font-display mt-3 text-5xl font-semibold text-emerald">Loved for comfort, softness, and finish.</h2>
           </div>
         </Reveal>
         <div className="grid gap-4">
@@ -180,9 +180,9 @@ export default async function Home() {
       <section className="relative overflow-hidden border-y border-white/10 bg-emerald py-16 text-white lg:py-20">
         <div className="absolute inset-0 luxury-texture opacity-70" />
         <div className="container-lux grid gap-8 lg:grid-cols-[1fr_420px]">
-          <div className="relative min-w-0">
+          <div className="relative">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">Instagram</p>
-            <h2 className="font-display mt-3 max-w-full break-words text-[2.45rem] font-semibold leading-[0.98] text-white sm:text-5xl lg:text-6xl">Follow the refined SAWRNA mood.</h2>
+            <h2 className="font-display mt-3 text-5xl font-semibold text-white">Follow the refined SAWRNA mood.</h2>
           </div>
           <NewsletterForm />
         </div>
@@ -209,7 +209,7 @@ function ShopByEdit({ products }: { products: Product[] }) {
       count: products.filter((product) => product.isTrending).length,
     },
     {
-      label: "Discount edit",
+      label: "Discount picks",
       href: "/products?discount=true&sort=discount",
       count: products.filter((product) => product.discount).length,
     },
@@ -221,8 +221,8 @@ function ShopByEdit({ products }: { products: Product[] }) {
       <div className="container-lux">
         <div className="relative flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">Shop the edit</p>
-            <h2 className="font-display mt-2 text-[2rem] font-semibold leading-[1] text-white sm:text-3xl lg:text-4xl">Curated paths into the SAWRNA collection.</h2>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">Shop by collection</p>
+            <h2 className="font-display mt-2 text-3xl font-semibold text-white lg:text-4xl">Curated paths into the SAWRNA collection.</h2>
           </div>
           <Link href="/products" className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-white/14 bg-white/8 px-5 text-xs font-semibold uppercase tracking-[0.16em] text-white transition hover:border-gold/50 hover:text-gold">
             <SlidersHorizontal size={15} /> All filters
@@ -253,7 +253,7 @@ function ProductSection({ eyebrow, title, products, tone = "light" }: { eyebrow:
           <div className="mb-8 flex items-end justify-between gap-4">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">{eyebrow}</p>
-              <h2 className="font-display mt-3 max-w-2xl text-[2.25rem] font-semibold leading-[1] text-emerald sm:text-4xl lg:text-6xl">{title}</h2>
+              <h2 className="font-display mt-3 max-w-2xl text-4xl font-semibold text-emerald lg:text-6xl">{title}</h2>
             </div>
             <Link href="/products" className="hidden text-sm font-semibold uppercase tracking-[0.18em] text-emerald hover:text-gold sm:block">View all</Link>
           </div>

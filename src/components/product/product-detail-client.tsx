@@ -1,22 +1,35 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Ruler, Share2, ShieldCheck, Star, Truck } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { AddToCartPanel } from "@/components/product/add-to-cart";
 import { ProductGrid } from "@/components/product/product-grid";
 import type { Product } from "@/lib/products";
+import { getFirstAvailableColor } from "@/lib/product-variants";
 import { formatPrice } from "@/lib/utils";
 
 export function ProductDetailClient({ product, related }: { product: Product; related: Product[] }) {
-  const gallery = useMemo(() => Array.from(new Set([...(product.gallery.length ? product.gallery : product.images), ...product.images])), [product.gallery, product.images]);
+  const defaultGallery = useMemo(
+    () => Array.from(new Set([...(product.gallery.length ? product.gallery : product.images), ...product.images])),
+    [product.gallery, product.images],
+  );
+  const [selectedColor, setSelectedColor] = useState(() => getFirstAvailableColor(product));
+  const gallery = useMemo(() => {
+    const colorGallery = product.variantMedia?.find((entry) => entry.color === selectedColor)?.images || [];
+    return Array.from(new Set([...(colorGallery.length ? colorGallery : defaultGallery), ...defaultGallery]));
+  }, [defaultGallery, product.variantMedia, selectedColor]);
   const [selected, setSelected] = useState(gallery[0]);
   const trustItems: [LucideIcon, string][] = [
     [Truck, "Fast dispatch"],
     [ShieldCheck, "Secure payment"],
     [Ruler, "XS-XXL sizes"],
   ];
+
+  useEffect(() => {
+    setSelected(gallery[0]);
+  }, [gallery]);
 
   return (
     <section className="container-lux py-8 lg:py-14">
@@ -27,7 +40,7 @@ export function ProductDetailClient({ product, related }: { product: Product; re
             <div className="relative aspect-[4/5] overflow-hidden rounded-[6px] bg-ivory">
               <Image
                 src={selected}
-                alt={product.name}
+                alt={`${product.name} in ${selectedColor}`}
                 fill
                 priority
                 className="object-contain object-center transition duration-700"
@@ -41,6 +54,7 @@ export function ProductDetailClient({ product, related }: { product: Product; re
             {gallery.map((image, index) => (
               <button
                 key={`${image}-${index}`}
+                type="button"
                 onClick={() => setSelected(image)}
                 className={`relative aspect-[3/4] overflow-hidden rounded-[8px] border bg-white transition ${selected === image ? "border-gold shadow-[0_12px_30px_rgba(4,45,40,0.12)]" : "border-emerald/12 opacity-78 hover:border-gold/45 hover:opacity-100"}`}
                 aria-label={`View ${product.name} image ${index + 1}`}
@@ -62,6 +76,7 @@ export function ProductDetailClient({ product, related }: { product: Product; re
               </span>
               <span>{product.reviews} reviews</span>
               <span>{product.stock} in stock</span>
+              {product.colors.length > 1 && <span>{product.colors.length} colour options</span>}
             </div>
 
             <div className="mt-6 flex flex-wrap items-baseline gap-3">
@@ -71,7 +86,7 @@ export function ProductDetailClient({ product, related }: { product: Product; re
             </div>
 
             <p className="mt-6 leading-8 text-muted">{product.description}</p>
-            <AddToCartPanel product={product} />
+            <AddToCartPanel product={product} color={selectedColor} onColorChange={setSelectedColor} />
 
             <div className="mt-8 grid gap-3 border-y border-emerald/10 py-5 sm:grid-cols-3">
               {trustItems.map(([Icon, label]) => (
@@ -84,7 +99,7 @@ export function ProductDetailClient({ product, related }: { product: Product; re
               ))}
             </div>
 
-            <button className="mt-6 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.18em] text-emerald transition hover:text-gold">
+            <button type="button" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.18em] text-emerald transition hover:text-gold">
               <Share2 size={16} /> Share
             </button>
           </div>
@@ -109,7 +124,7 @@ export function ProductDetailClient({ product, related }: { product: Product; re
       <section className="mt-20 rounded-[8px] border border-emerald/12 ivory-texture p-5 shadow-[0_18px_60px_rgba(4,45,40,0.08)] lg:p-8">
         <div className="mb-8 flex items-end justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">Complete the edit</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">You may also like</p>
             <h2 className="font-display mt-3 text-5xl font-semibold text-emerald">Related pieces</h2>
           </div>
         </div>

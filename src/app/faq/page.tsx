@@ -1,10 +1,3 @@
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "FAQ",
-  description: "Answers about SAWRNA COD, manual UPI, WhatsApp ordering, sizing, delivery, and support.",
-};
-
 const faqs = [
   ["Do you offer COD?", "Yes, Cash on Delivery is available for eligible Indian pincodes."],
   ["How does manual UPI work?", "Pay to the displayed UPI ID, upload the screenshot, and the admin team verifies the payment before confirmation."],

@@ -38,6 +38,7 @@ export const useCartStore = create<CartState>()(
       addItem: (product, options) =>
         set((state) => {
           const price = product.salePrice || product.price;
+          const image = product.variantMedia?.find((entry) => entry.color === options.color)?.images[0] || product.images[0];
           const existing = state.items.find(
             (item) => item.slug === product.slug && item.size === options.size && item.color === options.color,
           );
@@ -55,7 +56,7 @@ export const useCartStore = create<CartState>()(
                 slug: product.slug,
                 name: product.name,
                 price,
-                image: product.images[0],
+                image,
                 size: options.size,
                 color: options.color,
                 qty: options.qty || 1,

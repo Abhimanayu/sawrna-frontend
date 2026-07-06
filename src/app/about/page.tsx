@@ -1,10 +1,3 @@
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "About",
-  description: "Discover SAWRNA Premium Apparel, a luxury short kurti label focused on soft fabrics, refined details, and denim-friendly styling.",
-};
-
 export default function AboutPage() {
   return (
     <section className="container-lux py-16">

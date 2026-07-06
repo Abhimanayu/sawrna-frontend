@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 export function LoadingCurtain() {
   const [show, setShow] = useState(true);
   useEffect(() => {
-    const id = window.setTimeout(() => setShow(false), 420);
+    const id = window.setTimeout(() => setShow(false), 850);
     return () => window.clearTimeout(id);
   }, []);
 
@@ -17,7 +17,7 @@ export function LoadingCurtain() {
         <motion.div
           className="fixed inset-0 z-[100] grid place-items-center bg-emerald text-blush"
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0, transition: { duration: 0.22 } }}
+          exit={{ opacity: 0, transition: { duration: 0.45 } }}
         >
           <motion.div initial={{ y: 12, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-center">
             <Image

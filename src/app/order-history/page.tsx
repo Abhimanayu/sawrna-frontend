@@ -1,15 +1,9 @@
 import Link from "next/link";
-import type { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { getOrdersSnapshot } from "@/lib/orders";
 import { formatPrice } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
-
-export const metadata: Metadata = {
-  title: "Order History",
-  description: "Review SAWRNA order history, order totals, and tracking links for premium short kurtis.",
-};
 
 export default async function OrderHistoryPage() {
   const snapshot = await getOrdersSnapshot();

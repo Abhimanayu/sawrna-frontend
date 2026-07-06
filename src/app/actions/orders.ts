@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { hasAdminAccess } from "@/lib/admin-auth";
 import { createOrderRecord, getInitialOrderStatus, orderStatuses, saveOrderRecord, updateOrderStatus } from "@/lib/orders";
 import { orderSchema } from "@/lib/validations";
 
@@ -21,7 +20,6 @@ export async function createOrderAction(payload: unknown) {
 }
 
 export async function updateOrderStatusAction(formData: FormData) {
-  if (!(await hasAdminAccess())) return;
   const orderId = String(formData.get("orderId") || "");
   const status = String(formData.get("status") || "");
   if (!orderId || !orderStatuses.includes(status as (typeof orderStatuses)[number])) return;

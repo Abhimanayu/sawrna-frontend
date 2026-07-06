@@ -15,6 +15,7 @@ const ProductSchema = new Schema(
     colors: [String],
     sizes: [String],
     variants: [{ color: String, size: String, stock: Number }],
+    variantMedia: [{ color: String, images: [String] }],
     images: [String],
     gallery: [String],
     tags: [String],
