@@ -1,7 +1,7 @@
 export const siteConfig = {
   name: "SAWRNA",
   tagline: "Premium Apparel",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://sawrna-frontend.vercel.app",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://sawrna.vercel.app",
   supportEmail: "care@sawrna.com",
   whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "919999999999",
   upiId: process.env.NEXT_PUBLIC_UPI_ID || "sawrna@upi",

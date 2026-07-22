@@ -76,7 +76,7 @@ export function CartClient() {
           ))}
         </div>
       </div>
-      <aside className="gold-edge min-w-0 h-fit rounded-[8px] border border-emerald/12 bg-white/88 p-5 premium-shadow sm:p-6 lg:sticky lg:top-32">
+      <aside className="gold-edge h-fit rounded-[8px] border border-emerald/12 bg-white/88 p-6 premium-shadow lg:sticky lg:top-32">
         <h2 className="font-display text-3xl font-semibold text-emerald">Order Summary</h2>
         <div className="mt-5 rounded-[8px] border border-emerald/10 bg-ivory/70 p-3">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gold">Offers for you</p>
