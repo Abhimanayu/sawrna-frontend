@@ -185,9 +185,11 @@ function filterProducts(products: Product[], includeDraft: boolean) {
 }
 
 function toProduct(record: ProductRecord): Product {
+  const variantMedia = normalizeVariantMedia(record.variantMedia);
   const images = normalizeList(record.images);
   const gallery = normalizeList(record.gallery);
-  const firstImage = images[0] || gallery[0] || "/products/sawrna-short-kurti-01.jpeg";
+  const mediaImages = variantMedia.flatMap((item) => item.images);
+  const firstImage = images[0] || gallery[0] || mediaImages[0] || "/products/sawrna-short-kurti-01.jpeg";
   const price = Number(record.price || 0);
   const salePrice = record.salePrice ? Number(record.salePrice) : undefined;
 
@@ -205,8 +207,9 @@ function toProduct(record: ProductRecord): Product {
     colors: normalizeList(record.colors, ["Emerald"]),
     sizes: normalizeList(record.sizes, ["S", "M", "L", "XL", "XXL"]),
     variants: Array.isArray(record.variants) && record.variants.length ? record.variants : [],
+    variantMedia: variantMedia.length ? variantMedia : undefined,
     images: images.length ? images : [firstImage],
-    gallery: gallery.length ? gallery : [firstImage],
+    gallery: gallery.length ? gallery : mediaImages.length ? Array.from(new Set(mediaImages)) : [firstImage],
     tags: normalizeList(record.tags, ["short-kurti", "premium"]),
     features: normalizeList(record.features, ["Premium short kurti silhouette", "Easy denim-friendly styling"]),
     specifications: record.specifications || {},
@@ -233,4 +236,19 @@ function normalizeList(value: unknown, fallback: string[] = []) {
   if (Array.isArray(value)) return value.map(String).map((item) => item.trim()).filter(Boolean);
   if (typeof value === "string") return value.split(",").map((item) => item.trim()).filter(Boolean);
   return fallback;
+}
+
+function normalizeVariantMedia(value: unknown) {
+  if (!Array.isArray(value)) return [];
+
+  return value
+    .map((entry) => {
+      if (!entry || typeof entry !== "object") return null;
+      const record = entry as { color?: unknown; images?: unknown };
+      const color = typeof record.color === "string" ? record.color.trim() : "";
+      const images = normalizeList(record.images);
+      if (!color || !images.length) return null;
+      return { color, images };
+    })
+    .filter((entry): entry is { color: string; images: string[] } => Boolean(entry));
 }

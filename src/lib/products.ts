@@ -14,6 +14,7 @@ export type Product = {
   colors: string[];
   sizes: string[];
   variants: { color: string; size: string; stock: number }[];
+  variantMedia?: { color: string; images: string[] }[];
   images: string[];
   gallery: string[];
   tags: string[];
@@ -32,6 +33,12 @@ export type Product = {
   isTrending?: boolean;
 };
 
+type ColorOptionSeed = {
+  color: string;
+  image: string;
+  stock: number;
+};
+
 type ProductSeed = {
   name: string;
   slug: string;
@@ -41,8 +48,6 @@ type ProductSeed = {
   neckline: string;
   sleeve: string;
   fit: string;
-  shortDescription?: string;
-  description?: string;
   price: number;
   salePrice?: number;
   stock: number;
@@ -52,6 +57,7 @@ type ProductSeed = {
   isNew?: boolean;
   isBestSeller?: boolean;
   isTrending?: boolean;
+  alternateOptions?: ColorOptionSeed[];
 };
 
 const commonSizes = ["S", "M", "L", "XL", "XXL"];
@@ -67,7 +73,6 @@ const seeds: ProductSeed[] = [
     neckline: "Square neck",
     sleeve: "Three-quarter bell sleeves",
     fit: "Straight short kurti",
-    shortDescription: "Soft rayon cotton short kurti featuring delicate floral prints, crafted for effortless everyday elegance.",
     price: 1599,
     salePrice: 1299,
     stock: 28,
@@ -86,7 +91,6 @@ const seeds: ProductSeed[] = [
     neckline: "Square neck",
     sleeve: "Bell sleeves with lace trim",
     fit: "A-line short kurti",
-    shortDescription: "A graceful A-line silhouette in breathable muslin cotton with elegant bell sleeves and soft floral charm.",
     price: 1499,
     salePrice: 1199,
     stock: 34,
@@ -105,7 +109,6 @@ const seeds: ProductSeed[] = [
     neckline: "Keyhole square neck",
     sleeve: "Full sleeves",
     fit: "Fitted short kurti",
-    shortDescription: "Premium cotton silk short kurti adorned with refined mirror work for timeless sophistication.",
     price: 2199,
     salePrice: 1899,
     stock: 16,
@@ -123,7 +126,6 @@ const seeds: ProductSeed[] = [
     neckline: "Mandarin V neck",
     sleeve: "Three-quarter sleeves",
     fit: "Pleated waist short kurti",
-    shortDescription: "A maroon printed short kurti with a pleated waist and polished everyday appeal.",
     price: 1399,
     salePrice: 1099,
     stock: 42,
@@ -141,7 +143,6 @@ const seeds: ProductSeed[] = [
     neckline: "Straight square neck",
     sleeve: "Sleeveless tie straps",
     fit: "Side-slit short kurti",
-    shortDescription: "A sleek sleeveless short kurti with dori tie straps and side slits for relaxed summer styling.",
     price: 1299,
     salePrice: 999,
     stock: 25,
@@ -149,6 +150,7 @@ const seeds: ProductSeed[] = [
     rating: 4.6,
     reviews: 22,
     isTrending: true,
+    alternateOptions: [{ color: "Pista Green", image: "sawrna-short-kurti-06.jpeg", stock: 22 }],
   },
   {
     name: "Pista Leaf Print Sleeveless Short Kurti",
@@ -159,7 +161,6 @@ const seeds: ProductSeed[] = [
     neckline: "Square neck",
     sleeve: "Sleeveless",
     fit: "Straight easy fit",
-    shortDescription: "A fresh leaf-print sleeveless kurti in airy rayon slub for light, graceful daywear.",
     price: 1199,
     salePrice: 899,
     stock: 38,
@@ -176,7 +177,6 @@ const seeds: ProductSeed[] = [
     neckline: "Square neck",
     sleeve: "Bell sleeves with frill edge",
     fit: "Peplum short kurti",
-    shortDescription: "A cambric cotton peplum kurti with frill sleeves and indigo prints for a polished statement.",
     price: 1499,
     salePrice: 1199,
     stock: 31,
@@ -194,7 +194,6 @@ const seeds: ProductSeed[] = [
     neckline: "Round neck",
     sleeve: "Sleeveless",
     fit: "Straight longline short kurti",
-    shortDescription: "A vibrant straight-fit sleeveless kurti made for easy movement and bright everyday dressing.",
     price: 1299,
     salePrice: 999,
     stock: 46,
@@ -211,7 +210,6 @@ const seeds: ProductSeed[] = [
     neckline: "Round neck",
     sleeve: "Full sleeves",
     fit: "Relaxed straight fit",
-    shortDescription: "A soft blush printed kurti with full sleeves, created for refined workwear and relaxed evenings.",
     price: 1699,
     salePrice: 1399,
     stock: 19,
@@ -229,7 +227,6 @@ const seeds: ProductSeed[] = [
     neckline: "Angrakha V neck",
     sleeve: "Full sleeves",
     fit: "Wrap short kurti",
-    shortDescription: "An ivory wrap-style kurti with tie-up detailing and a graceful Angrakha-inspired neckline.",
     price: 1699,
     salePrice: 1399,
     stock: 21,
@@ -246,7 +243,6 @@ const seeds: ProductSeed[] = [
     neckline: "Sweetheart neck",
     sleeve: "Bell sleeves",
     fit: "Straight short kurti",
-    shortDescription: "A premium border-print kurti in black and maroon with bell sleeves and a refined sweetheart neckline.",
     price: 1799,
     salePrice: 1499,
     stock: 17,
@@ -264,7 +260,6 @@ const seeds: ProductSeed[] = [
     neckline: "V neck",
     sleeve: "Full sleeves",
     fit: "Side lace-up short kurti",
-    shortDescription: "A solid olive cotton-linen kurti with lace-up sides for a clean, contemporary silhouette.",
     price: 1499,
     salePrice: 1199,
     stock: 29,
@@ -282,7 +277,6 @@ const seeds: ProductSeed[] = [
     neckline: "V neck",
     sleeve: "Three-quarter sleeves",
     fit: "Peplum short kurti",
-    shortDescription: "A warm mocha peplum kurti with delicate prints and an easy feminine shape.",
     price: 1399,
     salePrice: 1099,
     stock: 36,
@@ -299,7 +293,6 @@ const seeds: ProductSeed[] = [
     neckline: "Square neck",
     sleeve: "Bell sleeves with lace",
     fit: "Straight short kurti",
-    shortDescription: "A wine-toned modal cotton kurti finished with lace-edged bell sleeves for understated elegance.",
     price: 1599,
     salePrice: 1299,
     stock: 23,
@@ -317,7 +310,6 @@ const seeds: ProductSeed[] = [
     neckline: "Round notch neck",
     sleeve: "Full sleeves",
     fit: "Angrakha short kurti",
-    shortDescription: "A floral cambric cotton Angrakha kurti with playful pom-pom trims and premium detail.",
     price: 1699,
     salePrice: 1399,
     stock: 27,
@@ -334,7 +326,6 @@ const seeds: ProductSeed[] = [
     neckline: "Wrap V neck",
     sleeve: "Bell sleeves",
     fit: "Wrap short kurti",
-    shortDescription: "A fuchsia wrap kurti in muslin cotton with bell sleeves and a graceful draped fit.",
     price: 1599,
     salePrice: 1299,
     stock: 33,
@@ -352,13 +343,13 @@ const seeds: ProductSeed[] = [
     neckline: "Square neck",
     sleeve: "Bell sleeves",
     fit: "Straight short kurti",
-    shortDescription: "A baby pink lace-trim kurti in soft modal cotton for subtle, everyday femininity.",
     price: 1399,
     salePrice: 1099,
     stock: 41,
     tags: ["solid", "lace-trim", "daily-wear", "short-kurti"],
     rating: 4.6,
     reviews: 21,
+    alternateOptions: [{ color: "Wine", image: "sawrna-short-kurti-14.jpeg", stock: 19 }],
   },
   {
     name: "Sky Blue Embroidered Short Kurti",
@@ -369,7 +360,6 @@ const seeds: ProductSeed[] = [
     neckline: "Square neck",
     sleeve: "Full sleeves",
     fit: "Straight side-slit short kurti",
-    shortDescription: "A sky blue embroidered cotton slub kurti with side slits and a refined handcrafted feel.",
     price: 1799,
     salePrice: 1499,
     stock: 18,
@@ -387,7 +377,6 @@ const seeds: ProductSeed[] = [
     neckline: "Round neck",
     sleeve: "Full sleeves",
     fit: "Straight short kurti",
-    shortDescription: "A dusty blush tassel kurti with premium motifs, designed for elegant festive moments.",
     price: 2199,
     salePrice: 1799,
     stock: 15,
@@ -398,47 +387,55 @@ const seeds: ProductSeed[] = [
   },
 ];
 
-function buildVariants(color: string, stock: number) {
+function buildVariants(options: ColorOptionSeed[]) {
   const split = [0.18, 0.24, 0.24, 0.2, 0.14];
-  return commonSizes.map((size, index) => ({
-    color,
-    size,
-    stock: Math.max(1, Math.floor(stock * split[index])),
-  }));
+  return options.flatMap(({ color, stock }) =>
+    commonSizes.map((size, index) => ({
+      color,
+      size,
+      stock: Math.max(1, Math.floor(stock * split[index])),
+    })),
+  );
+}
+
+function getColorOptions(seed: ProductSeed) {
+  return [{ color: seed.color, image: seed.image, stock: seed.stock }, ...(seed.alternateOptions || [])];
 }
 
 function makeProduct(seed: ProductSeed, index: number): Product {
-  const image = `${productBase}/${seed.image}`;
+  const colorOptions = getColorOptions(seed);
+  const variantMedia = colorOptions.map((option) => ({
+    color: option.color,
+    images: [`${productBase}/${option.image}`],
+  }));
+  const image = variantMedia[0]?.images[0] || `${productBase}/${seed.image}`;
   const discount = seed.salePrice ? Math.round(((seed.price - seed.salePrice) / seed.price) * 100) : undefined;
-  const shortDescription =
-    seed.shortDescription ||
-    `${seed.color} ${seed.fit.toLowerCase()} in ${seed.fabric.toLowerCase()}, crafted for refined everyday styling.`;
-  const description =
-    seed.description ||
-    `${shortDescription} Finished with a ${seed.neckline.toLowerCase()} and ${seed.sleeve.toLowerCase()}, this piece brings the quiet polish of SAWRNA to workdays, brunch plans, and relaxed celebrations.`;
+  const totalStock = colorOptions.reduce((sum, option) => sum + option.stock, 0);
 
   return {
     name: seed.name,
     slug: seed.slug,
     sku: `SAW-SK-${String(index + 1).padStart(3, "0")}`,
-    shortDescription,
-    description,
+    shortDescription: `${seed.color} ${seed.fit.toLowerCase()} in ${seed.fabric.toLowerCase()}, designed for denim, palazzos, and everyday styling.`,
+    description: `${seed.name} is a premium short kurti crafted in ${seed.fabric.toLowerCase()} with a ${seed.neckline.toLowerCase()}, ${seed.sleeve.toLowerCase()}, and a polished ${seed.fit.toLowerCase()} silhouette. Pair it with denim, flared pants, or straight trousers for a complete SAWRNA look.`,
     price: seed.price,
     salePrice: seed.salePrice,
     discount,
-    stock: seed.stock,
+    stock: totalStock,
     fabric: seed.fabric,
-    colors: [seed.color],
+    colors: colorOptions.map((option) => option.color),
     sizes: commonSizes,
-    variants: buildVariants(seed.color, seed.stock),
+    variants: buildVariants(colorOptions),
+    variantMedia,
     images: [image],
-    gallery: [image],
+    gallery: Array.from(new Set(variantMedia.flatMap((option) => option.images))),
     tags: seed.tags,
     features: [
       "Premium short kurti silhouette",
       seed.neckline,
       seed.sleeve,
-      "Styled for effortless day-to-evening wear",
+      colorOptions.length > 1 ? `${colorOptions.length} colour options in one article` : "Single colour article",
+      "Pairs well with denim and wide-leg pants",
     ],
     specifications: {
       Fit: seed.fit,
@@ -449,8 +446,8 @@ function makeProduct(seed: ProductSeed, index: number): Product {
       Care: "Gentle hand wash separately",
     },
     metaTitle: `${seed.name} | SAWRNA Short Kurtis`,
-    metaDescription: shortDescription,
-    keywords: ["short kurti", "women short kurti", seed.color.toLowerCase(), seed.fabric.toLowerCase(), "SAWRNA"],
+    metaDescription: `Shop ${seed.name}, a premium short kurti from SAWRNA with dummy stock, selectable sizes, and ${colorOptions.map((option) => option.color.toLowerCase()).join(", ")} options.`,
+    keywords: ["short kurti", "women short kurti", ...colorOptions.map((option) => option.color.toLowerCase()), seed.fabric.toLowerCase(), "SAWRNA"],
     canonicalUrl: `${siteConfig.url}/products/${seed.slug}`,
     ogImage: image,
     status: "active",

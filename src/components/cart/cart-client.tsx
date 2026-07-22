@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { Minus, Plus, Trash2 } from "lucide-react";
+import { Gem, Minus, Plus, ShieldCheck, ShoppingBag, Trash2, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getCouponBenefit, normalizeCoupon, previewCoupons } from "@/lib/coupons";
 import { formatPrice } from "@/lib/utils";
@@ -19,16 +19,28 @@ export function CartClient() {
 
   if (!items.length) {
     return (
-      <section className="container-lux py-20 text-center">
-        <h1 className="font-display text-5xl font-semibold text-emerald">Your bag is waiting.</h1>
-        <p className="mx-auto mt-4 max-w-md text-muted">Add a SAWRNA piece to begin checkout with COD, WhatsApp order, manual UPI, or payment link.</p>
-        <Button asChild className="mt-8"><Link href="/products">Shop Now</Link></Button>
+      <section className="container-lux py-10 sm:py-16">
+        <div className="relative mx-auto max-w-4xl overflow-hidden rounded-[8px] border border-gold/20 bg-[linear-gradient(135deg,#fffaf2,#efe4d2)] px-5 py-12 text-center shadow-[0_26px_78px_rgba(4,45,40,0.1)] sm:px-10 sm:py-16">
+          <div className="absolute inset-0 ivory-texture opacity-60" />
+          <div className="relative">
+            <span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-emerald text-gold shadow-[0_16px_38px_rgba(4,45,40,0.18)]"><ShoppingBag size={25} /></span>
+            <p className="mt-6 text-xs font-semibold uppercase tracking-[0.22em] text-gold">Your SAWRNA bag</p>
+            <h1 className="font-display mt-3 text-5xl font-semibold leading-none text-emerald sm:text-6xl">Ready when you are.</h1>
+            <p className="mx-auto mt-4 max-w-md text-sm leading-7 text-muted">Explore signature short kurtis and choose the colour and size that feel most like you.</p>
+            <Button asChild className="mt-7 w-full sm:w-auto"><Link href="/products">Explore The Collection</Link></Button>
+            <div className="mx-auto mt-8 grid max-w-2xl grid-cols-3 gap-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-emerald sm:text-xs sm:tracking-[0.12em]">
+              <span className="grid place-items-center gap-2 rounded-[8px] border border-emerald/10 bg-white/65 p-3"><Gem size={17} className="text-gold" /> Premium fabrics</span>
+              <span className="grid place-items-center gap-2 rounded-[8px] border border-emerald/10 bg-white/65 p-3"><Truck size={17} className="text-gold" /> Easy delivery</span>
+              <span className="grid place-items-center gap-2 rounded-[8px] border border-emerald/10 bg-white/65 p-3"><ShieldCheck size={17} className="text-gold" /> Secure order</span>
+            </div>
+          </div>
+        </div>
       </section>
     );
   }
 
   return (
-    <section className="container-lux grid min-w-0 gap-10 pb-28 pt-10 lg:grid-cols-[minmax(0,1fr)_390px] lg:py-16">
+    <section className="container-lux grid min-w-0 gap-10 py-10 lg:grid-cols-[minmax(0,1fr)_390px] lg:py-16">
       <div className="min-w-0">
         <div className="relative overflow-hidden rounded-[8px] border border-white/10 emerald-depth p-6 text-white">
           <div className="absolute inset-0 luxury-texture opacity-60" />
@@ -39,12 +51,12 @@ export function CartClient() {
         </div>
         <div className="mt-8 grid gap-5">
           {items.map((item) => (
-            <div key={`${item.slug}-${item.size}-${item.color}`} className="gold-edge grid min-w-0 grid-cols-[92px_minmax(0,1fr)] gap-4 rounded-[8px] border border-emerald/12 bg-white/84 p-3 shadow-[0_16px_44px_rgba(4,45,40,0.09)] sm:grid-cols-[120px_minmax(0,1fr)_auto]">
+            <div key={`${item.slug}-${item.size}-${item.color}`} className="gold-edge relative grid grid-cols-[92px_1fr] gap-4 rounded-[8px] border border-emerald/12 bg-white/84 p-3 shadow-[0_16px_44px_rgba(4,45,40,0.09)] sm:grid-cols-[120px_1fr]">
               <div className="relative aspect-[3/4] overflow-hidden rounded-[6px] border border-gold/18 image-polish p-1">
                 <Image src={item.image} alt={item.name} fill className="object-cover" sizes="120px" />
               </div>
-              <div className="min-w-0">
-                <Link href={`/products/${item.slug}`} className="block font-display text-xl font-semibold leading-tight text-emerald sm:text-2xl">{item.name}</Link>
+              <div className="pr-7">
+                <Link href={`/products/${item.slug}`} className="font-display text-2xl font-semibold text-emerald">{item.name}</Link>
                 <p className="mt-1 text-sm text-muted">{item.color} / {item.size}</p>
                 <p className="mt-3 font-semibold text-emerald">{formatPrice(item.price)}</p>
                 <div className="mt-4 flex w-fit items-center rounded-full border border-emerald/12 bg-ivory">
@@ -57,7 +69,7 @@ export function CartClient() {
                   </button>
                 </div>
               </div>
-              <button className="self-start text-muted hover:text-gold" onClick={() => removeItem(item.slug, item.size, item.color)} aria-label="Remove">
+              <button className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full border border-emerald/10 bg-white text-muted transition hover:border-gold/35 hover:text-gold" onClick={() => removeItem(item.slug, item.size, item.color)} aria-label="Remove">
                 <Trash2 size={18} />
               </button>
             </div>
@@ -67,7 +79,7 @@ export function CartClient() {
       <aside className="gold-edge min-w-0 h-fit rounded-[8px] border border-emerald/12 bg-white/88 p-5 premium-shadow sm:p-6 lg:sticky lg:top-32">
         <h2 className="font-display text-3xl font-semibold text-emerald">Order Summary</h2>
         <div className="mt-5 rounded-[8px] border border-emerald/10 bg-ivory/70 p-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gold">Preview coupons</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gold">Offers for you</p>
           <div className="mt-3 flex gap-2">
             <input
               value={couponInput}
@@ -95,19 +107,8 @@ export function CartClient() {
           <div className="flex justify-between text-lg font-semibold text-emerald"><span>Total</span><span>{formatPrice(total)}</span></div>
         </div>
         <Button asChild className="mt-6 w-full"><Link href="/checkout">Checkout</Link></Button>
-        <p className="mt-4 text-xs leading-5 text-muted">Cart is persisted locally and can synchronize with user carts once authenticated.</p>
+        <p className="mt-4 text-xs leading-5 text-muted">Your bag is saved on this device, so your selected pieces are ready when you return.</p>
       </aside>
-      <div className="fixed inset-x-3 bottom-3 z-40 rounded-full border border-emerald/12 bg-white/94 p-2 shadow-[0_18px_54px_rgba(4,45,40,0.18)] backdrop-blur lg:hidden">
-        <div className="grid grid-cols-[1fr_auto] items-center gap-2">
-          <div className="min-w-0 pl-3">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.13em] text-gold">Bag total</p>
-            <p className="text-sm font-semibold text-emerald">{formatPrice(total)}</p>
-          </div>
-          <Button asChild className="h-11 px-5">
-            <Link href="/checkout">Checkout</Link>
-          </Button>
-        </div>
-      </div>
     </section>
   );
 }

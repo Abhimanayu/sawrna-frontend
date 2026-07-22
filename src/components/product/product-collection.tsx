@@ -21,7 +21,7 @@ const styleOptions = ["All", "Sleeveless", "Bell sleeves", "Wrap", "Peplum", "St
 const occasionOptions = ["All", "Daily wear", "Work wear", "Party wear", "Summer"];
 const detailOptions = ["All", "Floral", "Printed", "Lace trim", "Mirror work", "Tassel", "Pom-pom", "Embroidered", "Solid"];
 const ratingOptions = ["All", "4.5+", "4.7+", "4.8+"];
-const highlightOptions = ["All", "New In", "Trending", "Best Sellers", "Premium"];
+const highlightOptions = ["All", "New arrivals", "Best sellers", "Trending"];
 
 const optionTokens: Record<string, string[]> = {
   "Bell sleeves": ["bell"],
@@ -104,7 +104,7 @@ export function ProductCollection({ products }: { products: Product[] }) {
     detail !== "All" && detail,
     rating !== "All" && `${rating} rating`,
     highlight !== "All" && highlight,
-    discountOnly && "Discount only",
+    discountOnly && "Special prices",
     priceMax < 2500 && `Under ${formatPrice(priceMax)}`,
   ].filter(Boolean) as string[];
 
@@ -126,7 +126,7 @@ export function ProductCollection({ products }: { products: Product[] }) {
     <div className="grid gap-6">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">Curate</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">Refine</p>
           <h2 className="font-display mt-1 text-3xl font-semibold text-emerald">Filters</h2>
         </div>
         {activeChips.length > 0 && (
@@ -169,7 +169,7 @@ export function ProductCollection({ products }: { products: Product[] }) {
         <FilterSelect label="Rating" value={rating} options={ratingOptions} onChange={setRating} />
       </FilterGroup>
 
-      <FilterGroup title="Quick edits" defaultOpen>
+      <FilterGroup title="Curated edits" defaultOpen>
         <ChipGroup
           value={highlight}
           onChange={setHighlight}
@@ -180,42 +180,44 @@ export function ProductCollection({ products }: { products: Product[] }) {
           onClick={() => setDiscountOnly((value) => !value)}
           type="button"
         >
-          Discount only
+          Special prices
         </button>
       </FilterGroup>
     </div>
   );
 
   return (
-    <section className="container-lux pb-24 pt-8 lg:pb-16 lg:pt-12">
-      <div className="relative mb-8 overflow-hidden rounded-[8px] border border-white/10 emerald-depth p-6 text-white lg:p-9">
-        <div className="absolute inset-0 luxury-texture opacity-60" />
-        <div className="relative grid gap-7 lg:grid-cols-[1fr_360px] lg:items-end">
+    <section className="container-lux pb-16 pt-6 lg:pt-10">
+      <div className="relative mb-6 overflow-hidden rounded-[8px] border border-gold/20 bg-[linear-gradient(135deg,#fffaf2_0%,#f6efe4_58%,#efe4d2_100%)] p-5 text-emerald shadow-[0_22px_64px_rgba(4,45,40,0.09)] sm:p-6 lg:mb-8 lg:p-9">
+        <div className="absolute inset-0 ivory-texture opacity-70" />
+        <div className="absolute inset-y-0 right-0 hidden w-[34%] bg-[radial-gradient(circle_at_top,rgba(4,45,40,0.08),transparent_62%)] lg:block" />
+        <div className="relative grid gap-5 lg:grid-cols-[1fr_330px] lg:items-end">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">Shop</p>
-            <h1 className="font-display mt-3 max-w-3xl text-4xl font-semibold leading-[0.96] text-white sm:text-5xl lg:text-7xl">
-              Explore the Signature Edit.
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">Collection</p>
+            <h1 className="font-display mt-3 max-w-3xl text-4xl font-semibold leading-[0.98] text-emerald sm:text-5xl lg:text-6xl">
+              Premium short kurtis, softly styled.
             </h1>
-            <p className="mt-5 max-w-2xl text-sm leading-7 text-white/70">
-              Browse premium short kurtis designed with refined fabrics, graceful details, and effortless everyday styling.
+            <p className="mt-4 max-w-2xl text-sm leading-6 text-muted sm:leading-7">
+              A focused collection of denim-friendly short kurtis with refined prints, breathable fabrics, and polished feminine details.
             </p>
+            <p className="mt-4 text-xs font-semibold uppercase tracking-[0.16em] text-gold lg:hidden">{filtered.length} styles available</p>
           </div>
-          <div className="grid gap-3 rounded-[8px] border border-white/12 bg-white/8 p-4 backdrop-blur">
+          <div className="hidden gap-3 rounded-[8px] border border-gold/18 bg-white/82 p-4 shadow-[0_18px_50px_rgba(4,45,40,0.08)] backdrop-blur lg:grid">
             <div className="flex items-center justify-between gap-3">
-              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-white/62">Available pieces</span>
+              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">Available pieces</span>
               <span className="font-display text-4xl font-semibold text-gold">{filtered.length}</span>
             </div>
-            <div className="grid grid-cols-3 gap-2 text-center text-[11px] font-semibold uppercase tracking-[0.12em] text-white/58">
-              <span className="rounded-full border border-white/10 px-2 py-2">New</span>
-              <span className="rounded-full border border-white/10 px-2 py-2">Printed</span>
-              <span className="rounded-full border border-white/10 px-2 py-2">COD</span>
+            <div className="grid grid-cols-3 gap-2 text-center text-[11px] font-semibold uppercase tracking-[0.12em] text-emerald/66">
+              <span className="rounded-full border border-emerald/10 bg-ivory px-2 py-2">New</span>
+              <span className="rounded-full border border-emerald/10 bg-ivory px-2 py-2">Printed</span>
+              <span className="rounded-full border border-emerald/10 bg-ivory px-2 py-2">COD</span>
             </div>
           </div>
         </div>
         <div className="relative mt-5 grid grid-cols-3 gap-2 sm:mt-7 sm:gap-3">
           {collectionMarks.map(([Icon, label, shortLabel]) => (
-            <div key={label} className="flex flex-col items-center justify-center gap-2 rounded-[8px] border border-white/12 bg-white/8 px-2 py-3 text-center text-xs text-white/76 backdrop-blur sm:flex-row sm:justify-start sm:gap-3 sm:rounded-full sm:px-4 sm:text-sm">
-              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/10 text-gold">
+            <div key={label} className="flex flex-col items-center justify-center gap-2 rounded-[8px] border border-emerald/10 bg-white/76 px-2 py-3 text-center text-xs text-emerald/76 shadow-[0_14px_34px_rgba(4,45,40,0.05)] backdrop-blur sm:flex-row sm:justify-start sm:gap-3 sm:rounded-full sm:px-4 sm:text-sm">
+              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-emerald text-gold">
                 <Icon size={16} />
               </span>
               <span className="font-medium sm:hidden">{shortLabel}</span>
@@ -231,30 +233,34 @@ export function ProductCollection({ products }: { products: Product[] }) {
         </aside>
 
         <div className="min-w-0">
-          <div className="flex flex-col gap-4 rounded-[8px] border border-emerald/12 bg-white/76 p-4 shadow-[0_16px_42px_rgba(4,45,40,0.08)] lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-col gap-3 rounded-[8px] border border-emerald/12 bg-white/82 p-3 shadow-[0_16px_42px_rgba(4,45,40,0.08)] sm:p-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">Browse edit</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">Browse collection</p>
               <p className="mt-1 text-sm text-muted">
-                Showing <span className="font-semibold text-emerald">{filtered.length}</span> of {products.length} curated pieces
+                Showing <span className="font-semibold text-emerald">{filtered.length}</span> of {products.length} curated styles
               </p>
             </div>
             <div className="hidden items-center gap-3 lg:flex">
               {activeChips.length > 0 && <ActiveChips chips={activeChips} onClear={clearFilters} />}
               <SortSelect sort={sort} onSortChange={setSort} />
             </div>
-          </div>
-
-          <div className="mt-5 rounded-[8px] border border-emerald/12 bg-white/82 p-4 shadow-[0_14px_38px_rgba(4,45,40,0.07)] lg:hidden">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">Refine</p>
-                <p className="mt-1 text-sm text-muted">{filtered.length} pieces ready to browse</p>
-              </div>
-              <Button variant="outline" className="h-11 shrink-0 px-4" onClick={() => setDrawerOpen(true)}>
+            <div className="grid grid-cols-2 gap-2 lg:hidden">
+              <Button variant="outline" className="h-11 min-w-0 px-3" onClick={() => setDrawerOpen(true)}>
                 <SlidersHorizontal size={16} /> Filters {activeChips.length ? `(${activeChips.length})` : ""}
               </Button>
+              <label className="relative min-w-0">
+                <ArrowUpDown className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gold" size={15} />
+                <select
+                  className="h-11 w-full rounded-full border border-emerald/12 bg-ivory pl-9 pr-3 text-[11px] font-semibold uppercase tracking-[0.1em] text-emerald outline-none"
+                  value={sort}
+                  onChange={(event) => setSort(event.target.value as typeof sort)}
+                  aria-label="Sort products"
+                >
+                  {sortOptions.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+                </select>
+              </label>
             </div>
-            <div className="hide-scrollbar mt-4 flex gap-2 overflow-x-auto pb-1">
+            <div className="hide-scrollbar flex gap-2 overflow-x-auto pb-1 lg:hidden">
               {highlightOptions.slice(1).map((option) => (
                 <button
                   key={option}
@@ -270,7 +276,7 @@ export function ProductCollection({ products }: { products: Product[] }) {
                 className={`shrink-0 rounded-full border px-3 py-2 text-xs font-semibold uppercase tracking-[0.12em] transition ${discountOnly ? "border-gold/45 bg-emerald text-white" : "border-emerald/12 bg-ivory text-emerald"}`}
                 onClick={() => setDiscountOnly((value) => !value)}
               >
-                Sale
+                Special prices
               </button>
             </div>
           </div>
@@ -287,29 +293,12 @@ export function ProductCollection({ products }: { products: Product[] }) {
             ) : (
               <div className="rounded-[8px] border border-emerald/12 bg-white/78 p-10 text-center shadow-[0_18px_54px_rgba(4,45,40,0.08)]">
                 <h2 className="font-display text-4xl text-emerald">No pieces found.</h2>
-                <p className="mt-3 text-muted">Try clearing one filter to see more of the SAWRNA edit.</p>
+                <p className="mt-3 text-muted">Try clearing one filter to see more of the collection.</p>
                 <Button className="mt-6" onClick={clearFilters}>Clear Filters</Button>
               </div>
             )}
           </div>
         </div>
-      </div>
-
-      <div className="fixed inset-x-3 bottom-3 z-40 grid grid-cols-[1fr_1fr] gap-2 rounded-full border border-emerald/12 bg-white/92 p-2 shadow-[0_18px_54px_rgba(4,45,40,0.16)] backdrop-blur lg:hidden">
-        <Button variant="outline" className="h-12" onClick={() => setDrawerOpen(true)}>
-          <SlidersHorizontal size={17} /> Filter {activeChips.length ? `(${activeChips.length})` : ""}
-        </Button>
-        <label className="relative">
-          <ArrowUpDown className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-gold" size={16} />
-          <select
-            className="h-12 w-full rounded-full border border-emerald/12 bg-ivory pl-10 pr-4 text-xs font-semibold uppercase tracking-[0.12em] text-emerald outline-none"
-            value={sort}
-            onChange={(event) => setSort(event.target.value as typeof sort)}
-            aria-label="Sort products"
-          >
-            {sortOptions.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
-          </select>
-        </label>
       </div>
 
       {drawerOpen && (
@@ -318,7 +307,7 @@ export function ProductCollection({ products }: { products: Product[] }) {
             <div className="sticky -top-5 z-10 mb-5 flex items-center justify-between border-b border-emerald/10 bg-ivory/95 py-4 backdrop-blur">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">Refine Collection</p>
-                <p className="mt-1 text-sm text-muted">{filtered.length} matching pieces</p>
+                <p className="mt-1 text-sm text-muted">{filtered.length} matching styles</p>
               </div>
               <button className="grid h-10 w-10 place-items-center rounded-full border border-emerald/12 bg-white text-emerald" onClick={() => setDrawerOpen(false)} aria-label="Close filters">
                 <X size={18} />
@@ -326,7 +315,7 @@ export function ProductCollection({ products }: { products: Product[] }) {
             </div>
             {filterPanel}
             <div className="sticky bottom-0 -mx-5 mt-8 border-t border-emerald/10 bg-ivory/95 p-5 backdrop-blur">
-              <Button className="w-full" onClick={() => setDrawerOpen(false)}>Show {filtered.length} Pieces</Button>
+              <Button className="w-full" onClick={() => setDrawerOpen(false)}>Show {filtered.length} Styles</Button>
             </div>
           </div>
         </div>
@@ -419,16 +408,12 @@ function readPriceMax(value: string | null) {
 }
 
 function readHighlight(searchParams: ReturnType<typeof useSearchParams>) {
-  const requestedHighlight = searchParams.get("highlight");
-  if (requestedHighlight === "New arrivals") return "New In";
-  if (requestedHighlight === "Best sellers") return "Best Sellers";
-  const highlight = readOption(requestedHighlight, highlightOptions);
+  const highlight = readOption(searchParams.get("highlight"), highlightOptions);
   if (highlight !== "All") return highlight;
   const tag = searchParams.get("tag");
-  if (tag === "best-seller") return "Best Sellers";
-  if (tag === "new-arrival") return "New In";
+  if (tag === "best-seller") return "Best sellers";
+  if (tag === "new-arrival") return "New arrivals";
   if (tag === "trending") return "Trending";
-  if (tag === "premium") return "Premium";
   return "All";
 }
 
@@ -445,9 +430,8 @@ function matchesProductOption(product: Product, option: string) {
 }
 
 function matchesHighlight(product: Product, highlight: string) {
-  if (highlight === "New In") return Boolean(product.isNew);
-  if (highlight === "Best Sellers") return Boolean(product.isBestSeller);
+  if (highlight === "New arrivals") return Boolean(product.isNew);
+  if (highlight === "Best sellers") return Boolean(product.isBestSeller);
   if (highlight === "Trending") return Boolean(product.isTrending);
-  if (highlight === "Premium") return product.tags.includes("premium");
   return true;
 }

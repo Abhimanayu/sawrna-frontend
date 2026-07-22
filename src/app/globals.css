@@ -37,7 +37,7 @@ html {
 
 body {
   min-width: 0;
-  overflow-x: hidden;
+  overflow-x: clip;
   background:
     linear-gradient(135deg, rgba(239, 228, 210, 0.82) 0%, rgba(248, 243, 234, 0) 42%),
     linear-gradient(180deg, #fffaf2 0%, var(--ivory) 44%, #ffffff 100%);
@@ -181,56 +181,17 @@ body {
   animation: sawrna-float 7s ease-in-out infinite;
 }
 
-@keyframes sawrna-curtain-out {
-  0%, 58% {
-    opacity: 1;
-    visibility: visible;
-  }
-  100% {
-    opacity: 0;
-    visibility: hidden;
-  }
-}
-
-@keyframes sawrna-curtain-logo-in {
-  0% {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.sawrna-curtain {
-  animation: sawrna-curtain-out 0.78s ease forwards;
-}
-
-.sawrna-curtain-logo {
-  animation: sawrna-curtain-logo-in 0.36s ease forwards;
-}
-
-@keyframes sawrna-reveal-in {
-  0% {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.sawrna-reveal {
-  animation: sawrna-reveal-in 0.68s ease both;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .sawrna-curtain,
-  .sawrna-curtain-logo,
-  .sawrna-reveal,
-  .sawrna-float {
-    animation: none;
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }

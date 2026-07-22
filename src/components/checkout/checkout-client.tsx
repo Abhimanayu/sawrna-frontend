@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Banknote, CreditCard, Link as LinkIcon, MessageCircle, ShieldCheck, Upload } from "lucide-react";
+import { Banknote, CreditCard, Gem, Link as LinkIcon, MessageCircle, ShieldCheck, ShoppingBag, Sparkles, Upload } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,7 +38,7 @@ const paymentOptions: { value: PaymentValue; label: string; note: string; Icon: 
 export function CheckoutClient() {
   const [confirmation, setConfirmation] = useState("");
   const [upiFile, setUpiFile] = useState("");
-  const [orderError, setOrderError] = useState("");
+  const [submitError, setSubmitError] = useState("");
   const { items, clearCart, coupon, setCoupon } = useCartStore();
   const [couponInput, setCouponInput] = useState(coupon || "");
   const subtotal = useMemo(() => items.reduce((sum, item) => sum + item.price * item.qty, 0), [items]);
@@ -54,34 +54,49 @@ export function CheckoutClient() {
   const paymentMethod = useWatch({ control: form.control, name: "paymentMethod" });
 
   const onSubmit = async (values: CheckoutValues) => {
-    setOrderError("");
-    const payload = { ...values, items, coupon: couponBenefit.valid ? couponBenefit.code : undefined, upiScreenshot: upiFile, total };
+    setSubmitError("");
+    if (values.paymentMethod === "upi" && !upiFile) {
+      setSubmitError("Please attach your UPI payment screenshot before placing the order.");
+      return;
+    }
+
     try {
+      const payload = { ...values, items, coupon: couponBenefit.valid ? couponBenefit.code : undefined, upiScreenshot: upiFile, total };
       const response = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data?.message || data?.error || "Order could not be placed.");
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || "We could not place your order. Please try again.");
+
       if (values.paymentMethod === "whatsapp") {
         const lines = items.map((item) => `${item.name} (${item.size}/${item.color}) x ${item.qty} - ${formatPrice(item.price * item.qty)}`);
         const message = encodeURIComponent(`SAWRNA order request\n\nCustomer: ${values.name}\nPhone: ${values.phone}\nAddress: ${values.address}, ${values.city} ${values.pincode}\n\n${lines.join("\n")}\n\nTotal: ${formatPrice(total)}`);
-        window.open(`https://wa.me/${siteConfig.whatsappNumber}?text=${message}`, "_blank");
+        const whatsappWindow = window.open(`https://wa.me/${siteConfig.whatsappNumber}?text=${message}`, "_blank", "noopener,noreferrer");
+        if (!whatsappWindow) window.location.assign(`https://wa.me/${siteConfig.whatsappNumber}?text=${message}`);
       }
       setConfirmation(data.orderId || "SAWRNA-CONFIRMED");
       clearCart();
     } catch (error) {
-      setOrderError(error instanceof Error ? error.message : "Order could not be placed. Please try again.");
+      setSubmitError(error instanceof Error ? error.message : "We could not place your order. Please try again.");
     }
   };
 
   if (!items.length && !confirmation) {
     return (
-      <section className="container-lux py-20 text-center">
-        <h1 className="font-display text-5xl font-semibold text-emerald">Your bag is empty.</h1>
-        <p className="mx-auto mt-4 max-w-md text-muted">Add a SAWRNA short kurti to begin the premium checkout flow.</p>
-        <Button className="mt-8" asChild><Link href="/products">Return to Collection</Link></Button>
+      <section className="container-lux py-10 sm:py-16">
+        <div className="relative mx-auto max-w-3xl overflow-hidden rounded-[8px] border border-gold/20 bg-[linear-gradient(135deg,#fffaf2,#efe4d2)] px-5 py-12 text-center shadow-[0_26px_78px_rgba(4,45,40,0.1)] sm:px-10 sm:py-16">
+          <div className="absolute inset-0 ivory-texture opacity-60" />
+          <div className="relative">
+            <span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-emerald text-gold shadow-[0_16px_38px_rgba(4,45,40,0.18)]"><ShoppingBag size={25} /></span>
+            <p className="mt-6 text-xs font-semibold uppercase tracking-[0.22em] text-gold">Checkout</p>
+            <h1 className="font-display mt-3 text-5xl font-semibold leading-none text-emerald sm:text-6xl">Choose something special first.</h1>
+            <p className="mx-auto mt-4 max-w-md text-sm leading-7 text-muted">Your checkout will be ready as soon as a favourite SAWRNA piece is in your bag.</p>
+            <Button className="mt-7 w-full sm:w-auto" asChild><Link href="/products"><Sparkles size={16} /> Explore The Collection</Link></Button>
+            <div className="mx-auto mt-7 inline-flex items-center gap-2 rounded-full border border-emerald/10 bg-white/65 px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-emerald"><Gem size={15} className="text-gold" /> Premium, secure, considered</div>
+          </div>
+        </div>
       </section>
     );
   }
@@ -98,27 +113,27 @@ export function CheckoutClient() {
   }
 
   return (
-    <section className="container-lux pb-28 pt-10 lg:py-16">
-      <div className="relative mb-5 overflow-hidden rounded-[8px] border border-white/10 emerald-depth p-5 text-white sm:mb-8 sm:p-6 lg:p-9">
+    <section className="container-lux py-10 lg:py-16">
+      <div className="relative mb-6 overflow-hidden rounded-[8px] border border-white/10 emerald-depth p-5 text-white sm:p-6 lg:mb-8 lg:p-9">
         <div className="absolute inset-0 luxury-texture opacity-60" />
         <div className="relative max-w-3xl">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">Secure checkout</p>
-          <h1 className="font-display mt-3 text-4xl font-semibold leading-[0.98] text-white sm:text-5xl lg:text-7xl">Address, payment, review.</h1>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-white/68">Complete your order with COD, WhatsApp order, manual UPI verification, or payment link support.</p>
+          <h1 className="font-display mt-3 text-4xl font-semibold leading-tight text-white sm:text-5xl lg:text-7xl">Address, payment, review.</h1>
+          <p className="mt-4 max-w-2xl text-sm leading-7 text-white/68">A clear, secure checkout with the payment option that suits you best.</p>
         </div>
       </div>
 
-      <div className="mb-5 grid grid-cols-3 gap-2 sm:mb-8 sm:gap-3">
+      <div className="mb-8 grid gap-3 sm:grid-cols-3">
         {["Address", "Payment", "Review"].map((step, index) => (
-          <div key={step} className="flex flex-col items-center justify-center gap-2 rounded-[8px] border border-emerald/12 bg-white/86 px-2 py-3 text-center text-xs text-emerald shadow-[0_10px_28px_rgba(4,45,40,0.08)] sm:flex-row sm:justify-start sm:rounded-full sm:px-4 sm:text-sm">
-            <span className="grid h-7 w-7 place-items-center rounded-full bg-emerald text-[11px] font-semibold text-white sm:h-8 sm:w-8 sm:text-xs">{index + 1}</span>
-            <span className="font-semibold leading-none">{step}</span>
+          <div key={step} className="flex items-center gap-3 rounded-full border border-emerald/12 bg-white/86 px-4 py-3 text-sm text-emerald shadow-[0_10px_28px_rgba(4,45,40,0.08)]">
+            <span className="grid h-8 w-8 place-items-center rounded-full bg-emerald text-xs font-semibold text-white">{index + 1}</span>
+            <span className="font-semibold">{step}</span>
           </div>
         ))}
       </div>
 
       <div className="grid min-w-0 gap-10 lg:grid-cols-[minmax(0,1fr)_390px]">
-        <form id="sawrna-checkout-form" onSubmit={form.handleSubmit(onSubmit)} className="gold-edge grid min-w-0 gap-7 rounded-[8px] border border-emerald/12 bg-white/88 p-4 premium-shadow sm:p-5 lg:p-7">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="gold-edge grid min-w-0 gap-7 rounded-[8px] border border-emerald/12 bg-white/88 p-5 premium-shadow lg:p-7">
           <section>
             <h2 className="font-display text-3xl font-semibold text-emerald">Delivery Address</h2>
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
@@ -157,7 +172,7 @@ export function CheckoutClient() {
                 return (
                   <label
                     key={value}
-                    className={`flex min-w-0 cursor-pointer gap-4 rounded-[8px] border p-4 text-sm transition ${active ? "border-gold/60 bg-emerald text-white shadow-[0_18px_42px_rgba(4,45,40,0.18)]" : "border-emerald/12 bg-ivory/80 text-emerald hover:border-gold/45 hover:bg-white"}`}
+                    className={`flex cursor-pointer gap-4 rounded-[8px] border p-4 text-sm transition ${active ? "border-gold/60 bg-emerald text-white shadow-[0_18px_42px_rgba(4,45,40,0.18)]" : "border-emerald/12 bg-ivory/80 text-emerald hover:border-gold/45 hover:bg-white"}`}
                   >
                     <input type="radio" value={value} {...form.register("paymentMethod")} className="sr-only" />
                     <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-full ${active ? "bg-white/12 text-gold" : "bg-white text-gold"}`}>
@@ -185,11 +200,7 @@ export function CheckoutClient() {
             )}
           </section>
 
-          {orderError && (
-            <div className="rounded-[8px] border border-gold/35 bg-ivory p-4 text-sm font-medium text-[#8a4f1f]">
-              {orderError}
-            </div>
-          )}
+          {submitError && <p role="alert" className="rounded-[8px] border border-[#a45d43]/25 bg-[#fff3ee] px-4 py-3 text-sm font-medium text-[#8a4f1f]">{submitError}</p>}
 
           <Button size="lg" type="submit" className="w-full sm:w-fit" disabled={isSubmitting}>
             {paymentMethod === "whatsapp" && <MessageCircle size={18} />} {isSubmitting ? "Placing Order..." : "Place Order"}
@@ -216,7 +227,7 @@ export function CheckoutClient() {
             ))}
           </div>
           <div className="mt-5 rounded-[8px] border border-emerald/10 bg-ivory/70 p-3">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gold">Coupon</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-gold">Offers for you</p>
             <div className="mt-3 flex gap-2">
               <input
                 value={couponInput}
@@ -246,19 +257,8 @@ export function CheckoutClient() {
               <span>{formatPrice(total)}</span>
             </div>
           </div>
-          <p className="mt-5 text-xs leading-5 text-muted">Manual UPI orders stay in payment-verification pending until your screenshot is checked by admin.</p>
+          <p className="mt-5 text-xs leading-5 text-muted">UPI orders are confirmed after our team verifies the payment screenshot.</p>
         </aside>
-      </div>
-      <div className="fixed inset-x-3 bottom-3 z-40 rounded-full border border-emerald/12 bg-white/94 p-2 shadow-[0_18px_54px_rgba(4,45,40,0.18)] backdrop-blur lg:hidden">
-        <div className="grid grid-cols-[1fr_auto] items-center gap-2">
-          <div className="min-w-0 pl-3">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.13em] text-gold">Payable total</p>
-            <p className="text-sm font-semibold text-emerald">{formatPrice(total)}</p>
-          </div>
-          <Button form="sawrna-checkout-form" type="submit" className="h-11 px-5" disabled={isSubmitting}>
-            {isSubmitting ? "Placing..." : "Place Order"}
-          </Button>
-        </div>
       </div>
     </section>
   );
