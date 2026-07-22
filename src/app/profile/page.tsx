@@ -1,9 +1,15 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { Heart, MapPin, ReceiptText, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getOrdersSnapshot } from "@/lib/orders";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Profile",
+  description: "View your SAWRNA account preview, saved details, wishlist, and recent premium apparel orders.",
+};
 
 export default async function ProfilePage() {
   const snapshot = await getOrdersSnapshot();

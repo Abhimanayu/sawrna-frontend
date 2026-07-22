@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import { ContactForm } from "@/components/contact/contact-form";
+
+export const metadata: Metadata = {
+  title: "Contact",
+  description: "Contact SAWRNA care for sizing, order tracking, payment verification, and premium apparel support.",
+};
 
 export default function ContactPage() {
   return (

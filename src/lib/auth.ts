@@ -12,6 +12,8 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials.password) return null;
+        const demoPassword = process.env.CUSTOMER_DEMO_PASSWORD;
+        if (!demoPassword || credentials.password !== demoPassword) return null;
         return { id: credentials.email, email: credentials.email, name: "SAWRNA Customer" };
       },
     }),

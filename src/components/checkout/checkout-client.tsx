@@ -50,6 +50,7 @@ export function CheckoutClient() {
     defaultValues: { paymentMethod: "cod" },
   });
   const errors = form.formState.errors;
+  const isSubmitting = form.formState.isSubmitting;
   const paymentMethod = useWatch({ control: form.control, name: "paymentMethod" });
 
   const onSubmit = async (values: CheckoutValues) => {
@@ -80,8 +81,6 @@ export function CheckoutClient() {
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : "We could not place your order. Please try again.");
     }
-    setConfirmation(data.orderId || "SAWRNA-CONFIRMED");
-    clearCart();
   };
 
   if (!items.length && !confirmation) {
@@ -208,7 +207,7 @@ export function CheckoutClient() {
           </Button>
         </form>
 
-        <aside className="gold-edge h-fit rounded-[8px] border border-emerald/12 bg-white/88 p-6 premium-shadow lg:sticky lg:top-32">
+        <aside className="gold-edge min-w-0 h-fit rounded-[8px] border border-emerald/12 bg-white/88 p-5 premium-shadow sm:p-6 lg:sticky lg:top-32">
           <div className="flex items-center gap-3">
             <span className="grid h-10 w-10 place-items-center rounded-full bg-blush text-gold"><ShieldCheck size={19} /></span>
             <div>

@@ -52,7 +52,7 @@ export function SearchExperience({ products }: { products: Product[] }) {
         <div className="relative max-w-3xl">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">Instant search</p>
           <h1 className="font-display mt-3 text-4xl font-semibold leading-tight text-white sm:text-5xl lg:text-7xl">Find your next short kurti.</h1>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-white/68">Search by fabric, color, sleeve, finish, or occasion across the SAWRNA short-kurti collection.</p>
+          <p className="mt-4 max-w-2xl text-sm leading-7 text-white/68">Search by fabric, color, sleeve, finish, or occasion across the SAWRNA short-kurti edit.</p>
         </div>
       </div>
       <div className="gold-edge mt-8 grid gap-4 rounded-[8px] border border-emerald/12 bg-white/86 p-4 shadow-[0_20px_60px_rgba(4,45,40,0.10)] lg:grid-cols-[1fr_220px_200px]">
