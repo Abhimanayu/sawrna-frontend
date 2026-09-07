@@ -1,32 +1,37 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 import { Heart, MapPin, ReceiptText, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { getOrdersSnapshot } from "@/lib/orders";
+import { SignOutButton } from "@/components/auth/sign-out-button";
+import { authOptions } from "@/lib/auth";
+import { getCustomerOrders } from "@/lib/orders";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Profile",
-  description: "View your SAWRNA account preview, saved details, wishlist, and recent premium apparel orders.",
+  description: "View your SAWRNA account, saved details, wishlist, and recent premium apparel orders.",
 };
 
 export default async function ProfilePage() {
-  const snapshot = await getOrdersSnapshot();
-  const latestOrder = snapshot.orders[0];
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id || !session.user.email) redirect("/login?callbackUrl=/profile");
+  const orders = await getCustomerOrders(session.user.id, session.user.email);
+  const latestOrder = orders[0];
 
   return (
     <section className="container-lux grid gap-6 py-12 lg:grid-cols-[1fr_360px] lg:py-16">
       <div className="gold-edge rounded-[8px] border border-emerald/12 bg-white/86 p-6 shadow-[0_20px_60px_rgba(4,45,40,0.09)] lg:p-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">Account Preview</p>
-        <h1 className="font-display mt-3 text-5xl font-semibold text-emerald lg:text-7xl">Your SAWRNA profile</h1>
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">Private account</p>
+        <h1 className="font-display mt-3 text-5xl font-semibold text-emerald lg:text-7xl">Welcome, {session.user.name || "SAWRNA customer"}.</h1>
         <p className="mt-4 max-w-xl text-muted">
-          A client-ready preview account area for saved addresses, wishlist, and order history. Production can connect this to real user sessions.
+          Manage your orders, saved pieces, and delivery details from your secure SAWRNA account.
         </p>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-3">
           {[
-            [ReceiptText, `${snapshot.orders.length}`, "Preview orders"],
+            [ReceiptText, `${orders.length}`, "Your orders"],
             [Heart, "Wishlist", "Saved locally"],
             [ShieldCheck, "Verified", "Secure checkout"],
           ].map(([Icon, value, label]) => (
@@ -60,8 +65,8 @@ export default async function ProfilePage() {
         <div className="gold-edge rounded-[8px] border border-emerald/12 bg-white/86 p-6 shadow-[0_18px_50px_rgba(4,45,40,0.08)]">
           <span className="grid h-10 w-10 place-items-center rounded-full bg-emerald text-gold"><MapPin size={18} /></span>
           <h2 className="font-display mt-4 text-3xl font-semibold text-emerald">Saved address</h2>
-          <p className="mt-2 text-sm leading-6 text-muted">Preview customer address appears from checkout orders.</p>
-          <Button asChild className="mt-5 w-full" variant="outline"><Link href="/login">Demo Login</Link></Button>
+          <p className="mt-2 text-sm leading-6 text-muted">{latestOrder ? `${latestOrder.customer.address}, ${latestOrder.customer.city} ${latestOrder.customer.pincode}` : "Your latest checkout address will appear here."}</p>
+          <SignOutButton />
         </div>
       </aside>
     </section>

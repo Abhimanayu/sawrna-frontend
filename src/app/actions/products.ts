@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { hasAdminAccess } from "@/lib/admin-auth";
 import { deleteCatalogProduct, saveCatalogProduct, seedCatalogProducts, updateCatalogProductStatus } from "@/lib/catalog";
 import { siteConfig } from "@/lib/config";
 
@@ -25,6 +26,7 @@ const productFormSchema = z.object({
 });
 
 export async function createOrUpdateProductAction(formData: FormData) {
+  if (!(await hasAdminAccess())) return;
   const parsed = productFormSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return;
 
@@ -90,6 +92,7 @@ export async function createOrUpdateProductAction(formData: FormData) {
 }
 
 export async function toggleProductStatusAction(formData: FormData) {
+  if (!(await hasAdminAccess())) return;
   const slug = String(formData.get("slug") || "");
   const status = formData.get("status") === "active" ? "draft" : "active";
   if (!slug) return;
@@ -103,6 +106,7 @@ export async function toggleProductStatusAction(formData: FormData) {
 }
 
 export async function deleteProductAction(formData: FormData) {
+  if (!(await hasAdminAccess())) return;
   const slug = String(formData.get("slug") || "");
   if (!slug) return;
 
@@ -115,6 +119,7 @@ export async function deleteProductAction(formData: FormData) {
 }
 
 export async function seedProductsAction() {
+  if (!(await hasAdminAccess())) return;
   try {
     await seedCatalogProducts();
     revalidateCatalog();

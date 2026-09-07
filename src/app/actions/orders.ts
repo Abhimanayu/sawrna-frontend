@@ -1,23 +1,27 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
+import { getServerSession } from "next-auth";
 import { hasAdminAccess } from "@/lib/admin-auth";
-import { createOrderRecord, getInitialOrderStatus, orderStatuses, saveOrderRecord, updateOrderStatus } from "@/lib/orders";
-import { orderSchema } from "@/lib/validations";
+import { authOptions } from "@/lib/auth";
+import { createVerifiedOrderRecord, orderStatuses, saveOrderRecord, updateOrderStatus } from "@/lib/orders";
+import { checkoutOrderSchema } from "@/lib/validations";
+import { sendOrderStatusNotification } from "@/lib/notifications";
 
 export async function createOrderAction(payload: unknown) {
-  const parsed = orderSchema.safeParse(payload);
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id || !session.user.email) return { ok: false, error: "Authentication required." };
+  const parsed = checkoutOrderSchema.safeParse(payload);
   if (!parsed.success) {
     return { ok: false, error: parsed.error.flatten() };
   }
 
-  const orderId = `SAW-${Date.now().toString(36).toUpperCase()}`;
-  const status = getInitialOrderStatus(parsed.data.paymentMethod);
-  const order = createOrderRecord(parsed.data, orderId, status);
+  const order = await createVerifiedOrderRecord(parsed.data, { id: session.user.id, email: session.user.email });
 
   const saveResult = await saveOrderRecord(order);
   revalidateOrderViews();
-  return { ok: true, orderId, status, persisted: saveResult.persisted, source: saveResult.source };
+  return { ok: true, orderId: order.orderId, status: order.status, persisted: saveResult.persisted, source: saveResult.source };
 }
 
 export async function updateOrderStatusAction(formData: FormData) {
@@ -26,7 +30,8 @@ export async function updateOrderStatusAction(formData: FormData) {
   const status = String(formData.get("status") || "");
   if (!orderId || !orderStatuses.includes(status as (typeof orderStatuses)[number])) return;
 
-  await updateOrderStatus(orderId, status as (typeof orderStatuses)[number]);
+  const order = await updateOrderStatus(orderId, status as (typeof orderStatuses)[number]);
+  if (order) after(() => sendOrderStatusNotification(order));
   revalidateOrderViews();
 }
 

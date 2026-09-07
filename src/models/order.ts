@@ -5,6 +5,7 @@ const StatusHistorySchema = new Schema({ status: String, note: String, at: { typ
 const OrderSchema = new Schema(
   {
     orderId: { type: String, required: true, unique: true },
+    userId: { type: String, required: true, index: true },
     customer: {
       name: String,
       email: String,
@@ -14,10 +15,14 @@ const OrderSchema = new Schema(
       pincode: String,
     },
     items: [{ slug: String, name: String, price: Number, image: String, size: String, color: String, qty: Number }],
+    subtotal: Number,
+    shipping: Number,
+    discount: Number,
     total: Number,
     coupon: String,
     paymentMethod: { type: String, enum: ["cod", "whatsapp", "upi", "payment-link"] },
     upiScreenshot: String,
+    stockRestored: { type: Boolean, default: false },
     status: {
       type: String,
       enum: ["Pending", "Payment Verification Pending", "Confirmed", "Processing", "Packed", "Shipped", "Delivered", "Cancelled", "Failed"],

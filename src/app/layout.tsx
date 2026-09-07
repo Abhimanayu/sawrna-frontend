@@ -3,6 +3,7 @@ import { Cormorant_Garamond, Inter } from "next/font/google";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { LoadingCurtain } from "@/components/layout/loading-curtain";
+import { AppProviders } from "@/components/providers/app-providers";
 import { siteConfig } from "@/lib/config";
 import "./globals.css";
 
@@ -66,10 +67,12 @@ export default function RootLayout({
       className={`${inter.variable} ${cormorant.variable} h-full antialiased`}
     >
       <body className="min-h-full">
-        <LoadingCurtain />
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        <AppProviders>
+          <LoadingCurtain />
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </AppProviders>
       </body>
     </html>
   );

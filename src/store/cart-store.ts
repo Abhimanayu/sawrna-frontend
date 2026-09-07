@@ -24,6 +24,7 @@ type CartState = {
   updateQty: (slug: string, size: string, color: string, qty: number) => void;
   setCoupon: (coupon: string | null) => void;
   clearCart: () => void;
+  setCustomerState: (state: { cart: CartItem[]; wishlist: string[]; coupon: string | null }) => void;
   toggleWishlist: (slug: string) => void;
   addRecentSearch: (query: string) => void;
 };
@@ -74,6 +75,7 @@ export const useCartStore = create<CartState>()(
         })),
       setCoupon: (coupon) => set({ coupon }),
       clearCart: () => set({ items: [], coupon: null }),
+      setCustomerState: (state) => set({ items: state.cart, wishlist: state.wishlist, coupon: state.coupon }),
       toggleWishlist: (slug) =>
         set((state) => ({
           wishlist: state.wishlist.includes(slug)

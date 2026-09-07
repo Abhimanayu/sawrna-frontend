@@ -1,7 +1,10 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { getOrdersSnapshot } from "@/lib/orders";
+import { authOptions } from "@/lib/auth";
+import { getCustomerOrders } from "@/lib/orders";
 import { formatPrice } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -12,8 +15,9 @@ export const metadata: Metadata = {
 };
 
 export default async function OrderHistoryPage() {
-  const snapshot = await getOrdersSnapshot();
-  const orders = snapshot.orders.slice(0, 12);
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id || !session.user.email) redirect("/login?callbackUrl=/order-history");
+  const orders = (await getCustomerOrders(session.user.id, session.user.email)).slice(0, 12);
 
   return (
     <section className="container-lux py-12 lg:py-16">
@@ -23,7 +27,7 @@ export default async function OrderHistoryPage() {
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">Account orders</p>
           <h1 className="font-display mt-2 text-5xl font-semibold text-white lg:text-7xl">Order History</h1>
           <p className="mt-4 max-w-2xl text-sm leading-7 text-white/68">
-            Preview mode shows recent demo orders from checkout. Production mode can scope this to logged-in customers.
+            Your confirmed SAWRNA purchases, payment status, and delivery progress in one private view.
           </p>
         </div>
       </div>
@@ -50,9 +54,9 @@ export default async function OrderHistoryPage() {
           </Link>
         )) : (
           <div className="gold-edge rounded-[8px] border border-emerald/12 bg-white/84 p-8 text-center shadow-[0_14px_34px_rgba(4,45,40,0.07)]">
-            <h2 className="font-display text-4xl font-semibold text-emerald">No preview orders yet.</h2>
+            <h2 className="font-display text-4xl font-semibold text-emerald">No orders yet.</h2>
             <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-muted">
-              Add a product to cart and complete checkout. The order will appear here and in the admin panel.
+              Add a product to your bag and complete checkout. Your order will appear here automatically.
             </p>
             <Button asChild className="mt-6"><Link href="/products">Start Shopping</Link></Button>
           </div>

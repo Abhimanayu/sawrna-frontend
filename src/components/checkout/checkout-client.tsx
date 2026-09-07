@@ -18,7 +18,7 @@ import { useCartStore } from "@/store/cart-store";
 const checkoutSchema = z.object({
   name: z.string().min(2, "Enter your full name."),
   email: z.string().email("Enter a valid email address."),
-  phone: z.string().min(10, "Enter a valid phone number."),
+  phone: z.string().regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit Indian mobile number."),
   address: z.string().min(10, "Enter your complete delivery address."),
   city: z.string().min(2, "Enter your city."),
   pincode: z.string().regex(/^\d{6}$/, "Enter a valid 6-digit pincode."),
@@ -35,9 +35,10 @@ const paymentOptions: { value: PaymentValue; label: string; note: string; Icon: 
   { value: "payment-link", label: "Payment Link", note: "Our team shares a secure link.", Icon: LinkIcon },
 ];
 
-export function CheckoutClient() {
+export function CheckoutClient({ customer }: { customer: { name: string; email: string } }) {
   const [confirmation, setConfirmation] = useState("");
-  const [upiFile, setUpiFile] = useState("");
+  const [upiFile, setUpiFile] = useState<File | null>(null);
+  const [uploadingReceipt, setUploadingReceipt] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const { items, clearCart, coupon, setCoupon } = useCartStore();
   const [couponInput, setCouponInput] = useState(coupon || "");
@@ -47,7 +48,7 @@ export function CheckoutClient() {
   const total = Math.max(0, subtotal + shipping - couponBenefit.discount - couponBenefit.shippingDiscount);
   const form = useForm<CheckoutValues>({
     resolver: zodResolver(checkoutSchema),
-    defaultValues: { paymentMethod: "cod" },
+    defaultValues: { name: customer.name, email: customer.email, paymentMethod: "cod" },
   });
   const errors = form.formState.errors;
   const isSubmitting = form.formState.isSubmitting;
@@ -61,18 +62,38 @@ export function CheckoutClient() {
     }
 
     try {
-      const payload = { ...values, items, coupon: couponBenefit.valid ? couponBenefit.code : undefined, upiScreenshot: upiFile, total };
+      let upiScreenshot: string | undefined;
+      if (values.paymentMethod === "upi" && upiFile) {
+        setUploadingReceipt(true);
+        const uploadForm = new FormData();
+        uploadForm.set("file", upiFile);
+        uploadForm.set("folder", "sawrna/payments");
+        const uploadResponse = await fetch("/api/upload", { method: "POST", body: uploadForm });
+        const uploadData = await uploadResponse.json().catch(() => ({}));
+        if (!uploadResponse.ok || !uploadData.url) {
+          throw new Error(uploadData.message || "We could not upload the payment screenshot.");
+        }
+        upiScreenshot = uploadData.url;
+      }
+
+      const payload = {
+        ...values,
+        items: items.map(({ slug, size, color, qty }) => ({ slug, size, color, qty })),
+        coupon: couponBenefit.valid ? couponBenefit.code : undefined,
+        upiScreenshot,
+      };
       const response = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
       const data = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(data.error || "We could not place your order. Please try again.");
+      if (!response.ok) throw new Error(data.message || data.error || "We could not place your order. Please try again.");
 
       if (values.paymentMethod === "whatsapp") {
         const lines = items.map((item) => `${item.name} (${item.size}/${item.color}) x ${item.qty} - ${formatPrice(item.price * item.qty)}`);
-        const message = encodeURIComponent(`SAWRNA order request\n\nCustomer: ${values.name}\nPhone: ${values.phone}\nAddress: ${values.address}, ${values.city} ${values.pincode}\n\n${lines.join("\n")}\n\nTotal: ${formatPrice(total)}`);
+        const confirmedTotal = Number(data.total || total);
+        const message = encodeURIComponent(`SAWRNA order request\n\nOrder: ${data.orderId}\nCustomer: ${values.name}\nPhone: ${values.phone}\nAddress: ${values.address}, ${values.city} ${values.pincode}\n\n${lines.join("\n")}\n\nTotal: ${formatPrice(confirmedTotal)}`);
         const whatsappWindow = window.open(`https://wa.me/${siteConfig.whatsappNumber}?text=${message}`, "_blank", "noopener,noreferrer");
         if (!whatsappWindow) window.location.assign(`https://wa.me/${siteConfig.whatsappNumber}?text=${message}`);
       }
@@ -80,6 +101,8 @@ export function CheckoutClient() {
       clearCart();
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : "We could not place your order. Please try again.");
+    } finally {
+      setUploadingReceipt(false);
     }
   };
 
@@ -142,11 +165,11 @@ export function CheckoutClient() {
                 <FieldError message={errors.name?.message} />
               </Field>
               <Field>
-                <Input placeholder="Email" {...form.register("email")} />
+                <Input placeholder="Email" readOnly aria-readonly="true" className="bg-ivory/70" {...form.register("email")} />
                 <FieldError message={errors.email?.message} />
               </Field>
               <Field>
-                <Input placeholder="Phone" {...form.register("phone")} />
+                <Input placeholder="10-digit mobile number" inputMode="numeric" autoComplete="tel" {...form.register("phone")} />
                 <FieldError message={errors.phone?.message} />
               </Field>
               <Field>
@@ -193,17 +216,22 @@ export function CheckoutClient() {
                 <div className="mt-3 grid h-32 w-32 place-items-center rounded-[8px] border border-dashed border-emerald/25 bg-white text-xs text-muted">QR Placeholder</div>
                 <label className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-full border border-emerald/12 bg-white px-4 py-2 text-sm font-semibold text-emerald transition hover:border-gold/45">
                   <Upload size={16} /> Upload screenshot
-                  <input type="file" className="hidden" onChange={(event) => setUpiFile(event.target.files?.[0]?.name || "")} />
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    className="hidden"
+                    onChange={(event) => setUpiFile(event.target.files?.[0] || null)}
+                  />
                 </label>
-                {upiFile && <p className="mt-2 text-xs text-muted">Attached: {upiFile}</p>}
+                {upiFile && <p className="mt-2 break-all text-xs text-muted">Attached: {upiFile.name}</p>}
               </div>
             )}
           </section>
 
           {submitError && <p role="alert" className="rounded-[8px] border border-[#a45d43]/25 bg-[#fff3ee] px-4 py-3 text-sm font-medium text-[#8a4f1f]">{submitError}</p>}
 
-          <Button size="lg" type="submit" className="w-full sm:w-fit" disabled={isSubmitting}>
-            {paymentMethod === "whatsapp" && <MessageCircle size={18} />} {isSubmitting ? "Placing Order..." : "Place Order"}
+          <Button size="lg" type="submit" className="w-full sm:w-fit" disabled={isSubmitting || uploadingReceipt}>
+            {paymentMethod === "whatsapp" && <MessageCircle size={18} />} {uploadingReceipt ? "Uploading Receipt..." : isSubmitting ? "Placing Order..." : "Place Order"}
           </Button>
         </form>
 

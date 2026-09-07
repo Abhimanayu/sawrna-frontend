@@ -48,7 +48,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
             <p className="mt-8 text-xs font-semibold uppercase tracking-[0.24em] text-gold">SAWRNA Admin</p>
             <h1 className="font-display mt-3 text-5xl font-semibold leading-none text-emerald lg:text-7xl">Store Console</h1>
             <p className="mt-4 max-w-2xl text-sm leading-6 text-muted">
-              Products saved here power the public collection, product detail pages, search API, and sitemap. Demo stock remains visible until MongoDB has products.
+              Products saved here power the public collection, product detail pages, search, stock validation, and sitemap.
             </p>
           </div>
           <div className="rounded-[8px] border border-emerald/12 bg-white/80 p-5 shadow-[0_18px_50px_rgba(4,45,40,0.08)]">
@@ -57,7 +57,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold">Catalog Source</p>
                 <p className="font-display text-2xl font-semibold text-emerald">
-                  {catalog.source === "database" ? "MongoDB Live" : catalog.source === "local" ? "Local Demo" : "Seed Demo"}
+                  {catalog.source === "database" ? "MongoDB Live" : catalog.source === "local" ? "Local Development" : "Starter Catalog"}
                 </p>
               </div>
             </div>
@@ -82,7 +82,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
 
         <div className="mt-5 grid gap-3 rounded-[8px] border border-emerald/12 bg-emerald p-4 text-ivory shadow-[0_20px_60px_rgba(4,45,40,0.16)] md:grid-cols-[1fr_auto] md:items-center">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">Preview tools</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">Store tools</p>
             <p className="mt-1 text-sm text-white/75">Open the exact public surfaces connected to this admin catalog.</p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -108,10 +108,10 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold">Order Desk</p>
-              <h2 className="font-display mt-2 text-3xl font-semibold text-emerald">Preview order management</h2>
+              <h2 className="font-display mt-2 text-3xl font-semibold text-emerald">Order management</h2>
             </div>
             <p className="text-xs leading-5 text-muted">
-              Source: {orderSnapshot.source === "database" ? "MongoDB" : "Local preview store"}
+              Source: {orderSnapshot.source === "database" ? "MongoDB" : "Local development store"}
             </p>
           </div>
 
@@ -127,6 +127,11 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
                   <p className="mt-2 text-sm text-emerald">
                     {order.items.length} item{order.items.length === 1 ? "" : "s"} / {formatPrice(order.total)} / {paymentLabel(order.paymentMethod)}
                   </p>
+                  {order.upiScreenshot && (
+                    <a href={order.upiScreenshot} target="_blank" rel="noreferrer" className="mt-2 inline-flex text-xs font-semibold uppercase tracking-[0.14em] text-gold hover:text-emerald">
+                      View payment receipt
+                    </a>
+                  )}
                   <div className="mt-3 flex flex-wrap gap-2">
                     {order.statusHistory.slice(-3).map((history) => (
                       <span key={`${order.orderId}-${history.status}-${history.at}`} className="rounded-full border border-emerald/10 bg-white px-3 py-1 text-[11px] text-muted">
@@ -148,7 +153,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
               </div>
             )) : (
               <div className="rounded-[8px] border border-dashed border-emerald/18 bg-ivory/72 p-8 text-center">
-                <h3 className="font-display text-3xl font-semibold text-emerald">No preview orders yet.</h3>
+                <h3 className="font-display text-3xl font-semibold text-emerald">No orders yet.</h3>
                 <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-muted">
                   Place one order from checkout and it will appear here instantly with tracking and status controls.
                 </p>

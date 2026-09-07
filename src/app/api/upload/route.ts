@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
+import { getServerSession } from "next-auth";
+import { hasAdminAccess } from "@/lib/admin-auth";
+import { authOptions } from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -25,10 +28,22 @@ export async function POST(request: Request) {
   try {
     const formData = await request.formData();
     const file = formData.get("file");
-    const folder = String(formData.get("folder") || "sawrna/uploads");
+    const requestedFolder = String(formData.get("folder") || "sawrna/uploads");
+    const paymentUpload = requestedFolder === "sawrna/payments";
+    const session = paymentUpload ? await getServerSession(authOptions) : null;
+    if (paymentUpload ? !session?.user?.id : !(await hasAdminAccess())) {
+      return NextResponse.json({ message: "Authentication required for this upload." }, { status: 401 });
+    }
+    const folder = paymentUpload ? "sawrna/payments" : "sawrna/products";
 
     if (!(file instanceof File)) {
       return NextResponse.json({ message: "Upload requires a file field." }, { status: 400 });
+    }
+    if (!new Set(["image/jpeg", "image/png", "image/webp"]).has(file.type)) {
+      return NextResponse.json({ message: "Upload a JPG, PNG, or WebP image." }, { status: 400 });
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      return NextResponse.json({ message: "Image must be smaller than 5 MB." }, { status: 400 });
     }
 
     const bytes = Buffer.from(await file.arrayBuffer());

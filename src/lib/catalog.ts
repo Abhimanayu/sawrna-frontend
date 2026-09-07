@@ -19,7 +19,7 @@ type ProductRecord = Partial<Product> & {
   updatedAt?: Date | string;
 };
 
-const fallbackOptions = { fallbackToSeed: true };
+const fallbackOptions = { fallbackToSeed: process.env.NODE_ENV !== "production" };
 
 export function hasMongoConfig() {
   return Boolean(process.env.MONGODB_URI);
@@ -56,8 +56,10 @@ export async function getCatalogProduct(slug: string) {
     } catch (error) {
       console.error("SAWRNA product database read failed", error);
     }
+    if (process.env.NODE_ENV === "production") return undefined;
   }
 
+  if (process.env.NODE_ENV === "production") return undefined;
   const localProducts = await readLocalCatalogProducts();
   return (
     localProducts.find((product) => product.slug === slug && product.status === "active") ||

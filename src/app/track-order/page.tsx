@@ -1,8 +1,11 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getServerSession } from "next-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { findOrderByLookup, orderStatuses } from "@/lib/orders";
+import { authOptions } from "@/lib/auth";
+import { hasAdminAccess } from "@/lib/admin-auth";
+import { findOrderById, findOrderByLookup, orderStatuses } from "@/lib/orders";
 import { formatPrice } from "@/lib/utils";
 
 const progressStatuses = orderStatuses.filter((status) => !["Cancelled", "Failed"].includes(status));
@@ -14,9 +17,17 @@ export const metadata: Metadata = {
   description: "Track your SAWRNA order timeline from pending to delivered.",
 };
 
-export default async function TrackOrderPage({ searchParams }: { searchParams: Promise<{ lookup?: string }> }) {
-  const { lookup = "" } = await searchParams;
-  const order = lookup ? await findOrderByLookup(lookup) : null;
+export default async function TrackOrderPage({ searchParams }: { searchParams: Promise<{ lookup?: string; contact?: string }> }) {
+  const { lookup = "", contact = "" } = await searchParams;
+  const [session, adminAccess] = await Promise.all([getServerSession(authOptions), hasAdminAccess()]);
+  const verificationContact = session?.user?.email || contact;
+  const order = lookup
+    ? adminAccess
+      ? await findOrderById(lookup)
+      : verificationContact
+        ? await findOrderByLookup(lookup, verificationContact)
+        : null
+    : null;
   const activeIndex = order ? progressStatuses.indexOf(order.status) : -1;
 
   return (
@@ -26,20 +37,23 @@ export default async function TrackOrderPage({ searchParams }: { searchParams: P
         <div className="relative">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">Order timeline</p>
           <h1 className="font-display mt-2 text-5xl font-semibold text-white lg:text-7xl">Track Order</h1>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-white/68">Use the preview order ID, phone number, or email from checkout.</p>
+          <p className="mt-4 max-w-2xl text-sm leading-7 text-white/68">Enter your order ID and checkout contact to securely view delivery progress.</p>
         </div>
       </div>
 
-      <form className="gold-edge mt-8 grid gap-3 rounded-[8px] border border-emerald/12 bg-white/86 p-4 shadow-[0_18px_50px_rgba(4,45,40,0.08)] sm:grid-cols-[1fr_auto]">
-        <Input name="lookup" defaultValue={lookup} placeholder="Enter order ID, phone, or email" />
+      <form className={`gold-edge mt-8 grid gap-3 rounded-[8px] border border-emerald/12 bg-white/86 p-4 shadow-[0_18px_50px_rgba(4,45,40,0.08)] ${session?.user?.email || adminAccess ? "sm:grid-cols-[1fr_auto]" : "sm:grid-cols-[1fr_1fr_auto]"}`}>
+        <Input name="lookup" defaultValue={lookup} placeholder="Enter order ID" />
+        {!session?.user?.email && !adminAccess && <Input name="contact" defaultValue={contact} placeholder="Checkout email or phone" />}
         <Button type="submit">Track</Button>
       </form>
+
+      {lookup && !verificationContact && !adminAccess && <p className="mt-4 text-center text-sm text-[#8a4f1f]">Enter the email or phone used at checkout.</p>}
 
       {lookup && !order && (
         <div className="mt-8 rounded-[8px] border border-emerald/12 bg-white/84 p-8 text-center shadow-[0_14px_34px_rgba(4,45,40,0.07)]">
           <h2 className="font-display text-4xl font-semibold text-emerald">Order not found.</h2>
           <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-muted">
-            Please check the order ID from checkout. For preview, place a fresh order and use the generated SAW order ID.
+            Check the order ID and the email or phone used during checkout.
           </p>
           <Button asChild className="mt-6"><Link href="/products">Shop Now</Link></Button>
         </div>
@@ -101,7 +115,7 @@ export default async function TrackOrderPage({ searchParams }: { searchParams: P
 }
 
 function timelineText(status: string, current: boolean) {
-  if (current) return "Current order stage in the SAWRNA preview timeline.";
+  if (current) return "Your order is currently at this stage.";
   if (status === "Payment Verification Pending") return "Manual UPI screenshot will be verified by admin.";
   if (status === "Confirmed") return "Order confirmed by SAWRNA care.";
   if (status === "Delivered") return "Order delivered to customer.";
