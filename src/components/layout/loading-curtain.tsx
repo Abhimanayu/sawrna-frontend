@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 export function LoadingCurtain() {
   const [show, setShow] = useState(true);
   useEffect(() => {
-    const id = window.setTimeout(() => setShow(false), 550);
+    const id = window.setTimeout(() => setShow(false), 320);
     return () => window.clearTimeout(id);
   }, []);
 
@@ -17,9 +17,14 @@ export function LoadingCurtain() {
         <motion.div
           className="fixed inset-0 z-[100] grid place-items-center bg-emerald text-blush"
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0, transition: { duration: 0.3 } }}
+          exit={{ opacity: 0, transition: { duration: 0.18 } }}
         >
-          <motion.div initial={{ y: 12, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="text-center">
+          <motion.div
+            initial={{ y: 8, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.18 }}
+            className="text-center"
+          >
             <Image
               src="/brand/sawrna-logo-header.png"
               alt="SAWRNA Premium Apparel"
